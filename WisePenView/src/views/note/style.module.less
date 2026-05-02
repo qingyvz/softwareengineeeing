@@ -1,0 +1,100 @@
+/* 相对 SystemLayout.middleContent（position: relative）铺满中间栏，不盖住侧栏与右侧面板 */
+.pageWrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 会话未就绪时仍挂载子树（跑 Yjs / BlockNote），但不交互、不可见 */
+.noteContent {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.root {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--ant-padding-lg) var(--ant-padding-xl);
+}
+
+.pageHeader {
+  flex-shrink: 0;
+  margin-bottom: var(--ant-margin-sm);
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ant-margin-xs);
+  margin-bottom: var(--ant-margin-sm);
+  color: var(--ant-color-text-secondary);
+  text-decoration: none;
+  font-size: var(--ant-font-size);
+
+  &:hover {
+    color: var(--ant-color-text);
+  }
+}
+
+.pageHeading {
+  margin: 0 !important;
+}
+
+.titleDivider {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.wsAlert {
+  flex-shrink: 0;
+  margin-bottom: var(--ant-margin-lg);
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--ant-margin-lg);
+}
+
+/* 仅盖住中间栏可视区域（pageWrap 即 middleContent 一屏范围） */
+.middleOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ant-color-bg-container);
+}
+
+.middleOverlayLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ant-margin-lg);
+}
+
+.middleOverlayText {
+  color: var(--ant-color-text-secondary);
+}
+
+.middleOverlayInner {
+  max-width: 480px;
+  padding: var(--ant-padding-lg);
+}

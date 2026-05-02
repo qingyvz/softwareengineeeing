@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7be42a6b-4a08-424e-b477-e4f42c6502cd" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../.idea/大二下.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ai_H/PJ_1/MaxPoolingLayer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../prompt/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../prompt/optimizer/GeminiOptimizer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../prompt/optimizer/SiliconFlowOptimizer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../prompt/optimizer/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../prompt/prompt_optimizer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../prompt/prompts/temple_1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../prompt/prompts/temple_2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../prompt/prompts/temple_3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../prompt/prompts/temple_5" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WisePenCloud/dev.properties.example" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WisePenCloud/docker-compose-app.yml" beforeDir="false" afterPath="$PROJECT_DIR$/WisePenCloud/docker-compose-app.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WisePenView/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/WisePenView/package.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="3Bc8UZSSeNh1dE86VtfYtRQklS6" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/fudan/4_semester/SoftwareEngineering",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.32098.37" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.32098.37" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7be42a6b-4a08-424e-b477-e4f42c6502cd" name="Changes" comment="" />
+      <created>1774777017682</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1774777017682</updated>
+      <workItem from="1774777020784" duration="625000" />
+      <workItem from="1775015017500" duration="133000" />
+      <workItem from="1777711976316" duration="190000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

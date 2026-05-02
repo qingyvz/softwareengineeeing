@@ -1,0 +1,361 @@
+# WisePenCloud 后端全部 Java 类清单（全量）
+
+> 本清单按你要求覆盖 **WisePenCloud 下全部 `src/main/java/**/*.java`**。  
+> 形式：`类文件（或相对路径）— 作用`。
+
+## 1. wisepen-common（全量）
+
+- `common\web\interceptor\HeaderInterceptor.java` — Web 请求头拦截与上下文处理。  
+- `common\web\interceptor\FeignRequestInterceptor.java` — Feign 调用头透传。  
+- `common\gray\GrayServiceInstanceListSupplier.java` — 灰度实例列表选择器。  
+- `common\gray\GrayLoadBalancerConfiguration.java` — 灰度负载配置。  
+- `common\gray\DeveloperIsolationAutoConfiguration.java` — 开发者隔离自动配置。  
+- `common\config\WisepenWebAutoConfiguration.java` — Web 自动配置。  
+- `common\config\RedisConfiguration.java` — Redis 配置。  
+- `common\config\JacksonConfiguration.java` — Jackson 序列化配置。  
+- `common\config\MybatisPlusMetaObjectHandler.java` — MyBatis 元对象填充处理。  
+- `common\config\GlobalGrayLoadBalancerAutoConfiguration.java` — 全局灰度 LB 自动配置。  
+- `common\config\KafkaErrorHandlerConfiguration.java` — Kafka 错误处理配置。  
+- `common\config\FeignConfiguration.java` — Feign 配置。  
+- `common\security\aspect\SecurityAspect.java` — 鉴权切面。  
+- `common\security\annotation\CheckRole.java` — 角色校验注解。  
+- `common\security\exception\PermissionException.java` — 权限异常。  
+- `common\security\annotation\CheckLogin.java` — 登录校验注解。  
+- `common\security\exception\PermissionErrorCode.java` — 权限错误码定义。  
+- `common\core\handler\GlobalExceptionHandler.java` — 全局异常处理器。  
+- `common\core\constant\SecurityConstants.java` — 安全常量。  
+- `common\core\constant\CommonConstants.java` — 通用常量。  
+- `common\core\context\SecurityContextHolder.java` — 安全上下文持有器。  
+- `common\core\context\GrayContextHolder.java` — 灰度上下文持有器。  
+- `common\core\exception\ServiceException.java` — 业务异常基类。  
+- `common\core\exception\IErrorCode.java` — 错误码接口。  
+- `common\core\domain\R.java` — 统一响应体。  
+- `common\core\domain\PageResult.java` — 分页响应体。  
+- `common\core\domain\enums\ResultCode.java` — 通用结果码。  
+- `common\core\domain\enums\GroupRoleType.java` — 组角色枚举。  
+- `common\core\domain\enums\BusinessType.java` — 业务类型枚举。  
+- `common\core\domain\enums\GroupType.java` — 组类型枚举。  
+- `common\core\domain\enums\IdentityType.java` — 身份类型枚举。  
+- `common\core\domain\enums\list\SortDirectionEnum.java` — 排序方向枚举。  
+- `common\core\domain\enums\list\QueryLogicEnum.java` — 查询逻辑枚举。
+
+## 2. wisepen-common-log（全量）
+
+- `common\log\service\AsyncLogService.java` — 异步日志服务。  
+- `common\log\config\LogAutoConfiguration.java` — 日志自动配置。  
+- `common\log\aspect\LogAspect.java` — 日志切面。  
+- `common\log\annotation\Log.java` — 日志注解。
+
+## 3. wisepen-resource-service（全量）
+
+- `resource\constant\ResourceValidationMsg.java` — 资源校验文案常量。  
+- `resource\constant\ResourceConstants.java` — 资源常量。  
+- `resource\constant\MqTopicConstants.java` — 资源域 MQ Topic 常量。  
+- `resource\feign\RemoteResourceService.java` — 资源服务 Feign 对外接口。  
+- `resource\enums\ResourceType.java` — 资源类型枚举。  
+- `resource\enums\ResourceSortBy.java` — 资源排序枚举。  
+- `resource\enums\ResourceAction.java` — 资源动作权限枚举。  
+- `resource\enums\ResourceAccessRole.java` — 资源访问角色枚举。  
+- `resource\enums\FileOrganizationLogic.java` — 文件组织逻辑枚举。  
+- `resource\enums\AclGrantMode.java` — ACL 授权模式枚举。  
+- `resource\ResPermissionApplication.java` — 资源服务启动入口。  
+- `resource\task\ResourceGcTask.java` — 资源垃圾回收任务。  
+- `resource\controller\ResourceTagController.java` — 标签相关接口控制器。  
+- `resource\controller\ResourceItemController.java` — 资源主接口控制器。  
+- `resource\controller\InternalResourceItemController.java` — 资源内部接口控制器。  
+- `resource\controller\GroupResConfigController.java` — 组资源配置控制器。  
+- `resource\exception\ResPermissionErrorCode.java` — 资源权限错误码。  
+- `resource\domain\mq\ResourceDeletedMessage.java` — 资源删除消息体。  
+- `resource\domain\mq\AclRecalculateMessage.java` — ACL 重算消息体。  
+- `resource\config\ResourceProperties.java` — 资源配置项。  
+- `resource\mq\KafkaEventPublisherImpl.java` — Kafka 事件发布实现。  
+- `resource\event\TagTrashedEvent.java` — 标签回收事件。  
+- `resource\mq\IEventPublisher.java` — 事件发布接口。  
+- `resource\event\TagDeletedEvent.java` — 标签删除事件。  
+- `resource\mq\AclRecalculateConsumer.java` — ACL 重算消息消费者。  
+- `resource\event\TagChangedEvent.java` — 标签变更事件。  
+- `resource\service\IGroupResService.java` — 组资源服务接口。  
+- `resource\domain\base\ResourceItemInfoBase.java` — 资源基础模型。  
+- `resource\domain\base\TagSpaceBase.java` — 标签空间基础模型。  
+- `resource\domain\base\TagInfoBase.java` — 标签基础模型。  
+- `resource\service\IResourceService.java` — 资源服务接口。  
+- `resource\service\ITagService.java` — 标签服务接口。  
+- `resource\repository\TagRepository.java` — 标签仓储。  
+- `resource\repository\ResourceItemRepository.java` — 资源仓储。  
+- `resource\repository\GroupResConfigRepository.java` — 组配置仓储。  
+- `resource\repository\CustomResourceItemRepository.java` — 复杂资源查询仓储。  
+- `resource\domain\GroupTagBind.java` — 组与标签绑定模型。  
+- `resource\domain\dto\ResourceUpdateReqDTO.java` — 资源更新 DTO。  
+- `resource\domain\dto\ResourceInfoGetReqDTO.java` — 资源查询 DTO。  
+- `resource\domain\dto\ResourceCreateReqDTO.java` — 资源创建 DTO。  
+- `resource\domain\dto\ResourceCheckPermissionResDTO.java` — 权限校验响应 DTO。  
+- `resource\domain\dto\ResourceCheckPermissionReqDTO.java` — 权限校验请求 DTO。  
+- `resource\domain\ComputedGroupAcl.java` — 计算后的组 ACL 模型。  
+- `resource\service\impl\TagServiceImpl.java` — 标签服务实现。  
+- `resource\service\impl\ResourceServiceImpl.java` — 资源服务实现。  
+- `resource\service\impl\GroupResServiceImpl.java` — 组资源服务实现。  
+- `resource\domain\entity\TagEntity.java` — 标签实体。  
+- `resource\domain\entity\ResourceItemEntity.java` — 资源实体。  
+- `resource\domain\entity\GroupResConfigEntity.java` — 组资源配置实体。  
+- `resource\domain\dto\res\TagTreeResponse.java` — 标签树响应 DTO。  
+- `resource\domain\dto\res\ResourceItemResponse.java` — 资源项响应 DTO。  
+- `resource\domain\dto\res\GroupResConfigResponse.java` — 组配置响应 DTO。  
+- `resource\domain\dto\req\TagUpdateRequest.java` — 标签更新请求 DTO。  
+- `resource\domain\dto\req\TagMoveRequest.java` — 标签移动请求 DTO。  
+- `resource\domain\dto\req\TagDeleteRequest.java` — 标签删除请求 DTO。  
+- `resource\domain\dto\req\TagCreateRequest.java` — 标签创建请求 DTO。  
+- `resource\domain\dto\req\ResourceUpdateTagsRequest.java` — 资源标签更新请求 DTO。  
+- `resource\domain\dto\req\ResourceUpdateActionPermissionRequest.java` — 资源动作权限更新请求 DTO。  
+- `resource\domain\dto\req\ResourceRenameRequest.java` — 资源重命名请求 DTO。  
+- `resource\domain\dto\req\GroupResConfigUpdateRequest.java` — 组配置更新请求 DTO。
+
+## 4. wisepen-note-service（全量）
+
+- `note\api\feign\RemoteNoteService.java` — 笔记服务 Feign 对外接口。  
+- `note\service\INoteVersionService.java` — 笔记版本服务接口。  
+- `note\service\INoteService.java` — 笔记服务接口。  
+- `note\service\INoteOperationLogService.java` — 笔记操作日志服务接口。  
+- `note\service\impl\NoteVersionServiceImpl.java` — 版本服务实现。  
+- `note\service\impl\NoteServiceImpl.java` — 笔记服务实现。  
+- `note\service\impl\NoteOperationLogServiceImpl.java` — 操作日志服务实现。  
+- `note\repository\NoteVersionRepository.java` — 笔记版本仓储。  
+- `note\repository\NoteOperationLogRepository.java` — 操作日志仓储。  
+- `note\repository\NoteDocumentRepository.java` — 笔记正文仓储。  
+- `note\NoteApplication.java` — 笔记服务启动入口。  
+- `note\api\domain\mq\NoteSnapshotMessage.java` — 笔记快照消息体。  
+- `note\api\domain\mq\NoteOperationLogMessage.java` — 笔记操作日志消息体。  
+- `note\exception\NoteErrorCode.java` — 笔记错误码。  
+- `note\api\domain\enums\VersionType.java` — 版本类型枚举。  
+- `note\domain\entity\NoteVersionEntity.java` — 笔记版本实体。  
+- `note\domain\entity\NoteOperationLogEntity.java` — 笔记日志实体。  
+- `note\domain\entity\NoteInfoEntity.java` — 笔记信息实体。  
+- `note\api\domain\dto\res\NoteVersionListResponse.java` — 版本列表响应 DTO。  
+- `note\api\domain\dto\res\NoteSnapshotResponse.java` — 快照响应 DTO。  
+- `note\api\domain\dto\res\NoteOperationLogResponse.java` — 日志响应 DTO。  
+- `note\api\domain\dto\res\NoteInfoResponse.java` — 笔记信息响应 DTO。  
+- `note\controller\OpLogController.java` — 操作日志控制器。  
+- `note\controller\NoteController.java` — 笔记主控制器。  
+- `note\controller\InternalNoteController.java` — 笔记内部控制器。  
+- `note\api\domain\dto\req\NoteVersionQueryRequest.java` — 版本查询请求 DTO。  
+- `note\api\domain\dto\req\NoteCreateRequest.java` — 笔记创建请求 DTO。  
+- `note\consumer\ResourceDeletedConsumer.java` — 资源删除消费者。  
+- `note\consumer\NoteSnapshotConsumer.java` — 快照消费者。  
+- `note\consumer\NoteOperationLogConsumer.java` — 操作日志消费者。  
+- `note\api\domain\base\NoteVersionBase.java` — 版本基础模型。  
+- `note\api\domain\base\NoteOperationLogBase.java` — 日志基础模型。  
+- `note\api\domain\base\NoteInfoBase.java` — 笔记基础模型。  
+- `note\config\NoteProperties.java` — 笔记配置。  
+- `note\api\constant\NoteValidationMsg.java` — 笔记校验文案常量。  
+- `note\api\constant\MqTopicConstants.java` — 笔记域 MQ Topic 常量。
+
+## 5. wisepen-document-service（全量）
+
+- `document\DocumentApplication.java` — 文档服务启动入口。  
+- `document\util\WatermarkPreProcessor.java` — 水印预处理工具。  
+- `document\util\WatermarkAppendixBuilder.java` — 水印附录构建工具。  
+- `document\util\PdfContentStreamBuilder.java` — PDF 内容流构建工具。  
+- `document\util\MicroDotCodec.java` — 微点编码工具。  
+- `document\config\DocumentProperties.java` — 文档配置项。  
+- `document\task\DocumentGcTask.java` — 文档垃圾回收任务。  
+- `document\consumer\ResourceDeletedConsumer.java` — 资源删除消费者。  
+- `document\consumer\FileUploadedConsumer.java` — 文件上传完成消费者。  
+- `document\consumer\DocumentConversionAndParseConsumer.java` — 文档转换解析消费者。  
+- `document\service\IDocumentPreviewService.java` — 文档预览服务接口。  
+- `document\service\IDocumentFileService.java` — 文档文件服务接口。  
+- `document\service\IDocumentService.java` — 文档服务接口。  
+- `document\mq\KafkaDocumentEventPublisher.java` — 文档事件发布器。  
+- `document\controller\DocumentController.java` — 文档外部控制器。  
+- `document\controller\InternalDocumentController.java` — 文档内部控制器。  
+- `document\repository\DocumentPdfMetaRepository.java` — PDF 元数据仓储。  
+- `document\repository\DocumentInfoRepository.java` — 文档信息仓储。  
+- `document\repository\DocumentContentRepository.java` — 文档内容仓储。  
+- `document\exception\DocumentErrorCode.java` — 文档错误码。  
+- `document\service\impl\DocumentServiceImpl.java` — 文档服务实现。  
+- `document\service\impl\DocumentPreviewServiceImpl.java` — 文档预览实现。  
+- `document\service\impl\DocumentFileServiceImpl.java` — 文档文件服务实现。  
+- `document\api\constant\MqTopicConstants.java` — 文档域 MQ Topic 常量。  
+- `document\api\constant\DocumentValidationMsg.java` — 文档校验文案常量。  
+- `document\api\constant\DocumentConstants.java` — 文档常量。  
+- `document\api\enums\DocumentStatusEnum.java` — 文档状态枚举。  
+- `document\domain\entity\DocumentPdfMetaEntity.java` — 文档 PDF 元数据实体。  
+- `document\domain\entity\DocumentInfoEntity.java` — 文档信息实体。  
+- `document\domain\entity\DocumentContentEntity.java` — 文档内容实体。  
+- `document\api\domain\base\DocumentUploadMeta.java` — 文档上传元数据基础模型。  
+- `document\api\domain\base\DocumentStatus.java` — 文档状态基础模型。  
+- `document\api\domain\base\DocumentInfoBase.java` — 文档信息基础模型。  
+- `document\api\domain\mq\DocumentReadyMessage.java` — 文档就绪消息体。  
+- `document\api\domain\mq\DocumentParseTaskMessage.java` — 文档解析任务消息体。  
+- `document\api\domain\dto\res\DocumentUploadInitResponse.java` — 文档上传初始化响应 DTO。  
+- `document\api\domain\dto\res\DocumentInfoResponse.java` — 文档信息响应 DTO。  
+- `document\api\domain\dto\req\DocumentUploadInitRequest.java` — 文档上传初始化请求 DTO。
+
+## 6. wisepen-file-storage-service（全量）
+
+- `storage\task\StorageGcTask.java` — 存储垃圾回收任务。  
+- `storage\strategy\StorageProvider.java` — 存储提供者接口。  
+- `storage\strategy\StorageManager.java` — 存储策略调度器。  
+- `storage\strategy\aliyun\AliyunOssProvider.java` — 阿里云 OSS 提供者实现。  
+- `storage\service\IStorageService.java` — 存储服务接口。  
+- `storage\service\impl\StorageServiceImpl.java` — 存储服务实现。  
+- `storage\mq\KafkaStorageEventPublisher.java` — 存储事件发布器。  
+- `storage\mapper\StorageRecordMapper.java` — 存储记录 Mapper。  
+- `storage\mapper\StorageConfigMapper.java` — 存储配置 Mapper。  
+- `storage\FileStorageApplication.java` — 存储服务启动入口。  
+- `storage\exception\StorageErrorCode.java` — 存储错误码。  
+- `storage\api\feign\RemoteStorageService.java` — 存储服务 Feign 接口。  
+- `storage\domain\entity\StorageRecordEntity.java` — 存储记录实体。  
+- `storage\domain\entity\StorageConfigEntity.java` — 存储配置实体。  
+- `storage\config\StorageProperties.java` — 存储配置项。  
+- `storage\customer\FileDeleteConsumer.java` — 文件删除消费者。  
+- `storage\controller\StorageController.java` — 存储对外控制器。  
+- `storage\controller\InternalStorageController.java` — 存储内部控制器。  
+- `storage\controller\ExternalStorageController.java` — 存储外部控制器。  
+- `storage\api\enums\StorageProviderEnum.java` — 存储提供方枚举。  
+- `storage\api\enums\StorageStatusEnum.java` — 存储状态枚举。  
+- `storage\api\enums\StorageSceneEnum.java` — 存储场景枚举。  
+- `storage\api\constant\MqTopicConstants.java` — 存储域 MQ Topic 常量。  
+- `storage\api\domain\base\UploadUrlBase.java` — 上传 URL 基础模型。  
+- `storage\api\domain\base\StorageRecordBase.java` — 存储记录基础模型。  
+- `storage\api\domain\dto\StsTokenDTO.java` — STS Token DTO。  
+- `storage\api\domain\dto\StorageRecordDTO.java` — 存储记录 DTO。  
+- `storage\api\domain\dto\UploadInitReqDTO.java` — 上传初始化请求 DTO。  
+- `storage\api\domain\dto\UploadInitRespDTO.java` — 上传初始化响应 DTO。  
+- `storage\api\domain\mq\FileUploadedMessage.java` — 文件上传完成消息体。
+
+## 7. wisepen-system-service（全量）
+
+- `system\SystemApplication.java` — 系统服务启动入口。  
+- `system\service\SysOperLogService.java` — 操作日志服务接口。  
+- `system\service\SysMailService.java` — 邮件服务接口。  
+- `system\service\FeedbackService.java` — 反馈服务接口。  
+- `system\service\impl\SysOperLogServiceImpl.java` — 操作日志服务实现。  
+- `system\service\impl\FeedbackServiceImpl.java` — 反馈服务实现。  
+- `system\service\impl\SysMailServiceImpl.java` — 邮件服务实现。  
+- `system\excpetion\SysErrorCode.java` — 系统错误码。  
+- `system\mapper\SysOperLogMapper.java` — 系统日志 Mapper。  
+- `system\mapper\FeedbackMapper.java` — 反馈 Mapper。  
+- `system\controller\RemoteLogController.java` — 远程日志控制器。  
+- `system\controller\UserFeedbackController.java` — 用户反馈控制器。  
+- `system\controller\MailController.java` — 邮件控制器。  
+- `system\domain\entity\SysOperLogEntity.java` — 系统操作日志实体。  
+- `system\domain\entity\FeedbackEntity.java` — 反馈实体。  
+- `system\api\feign\RemoteMailService.java` — 邮件 Feign 接口。  
+- `system\api\feign\RemoteLogService.java` — 日志 Feign 接口。  
+- `system\api\enums\FeedbackType.java` — 反馈类型枚举。  
+- `system\api\enums\FeedbackStatus.java` — 反馈状态枚举。  
+- `system\api\domain\dto\SysOperLogDTO.java` — 操作日志 DTO。  
+- `system\api\domain\dto\MailSendDTO.java` — 邮件发送 DTO。  
+- `system\api\domain\dto\FeedbackRequest.java` — 反馈请求 DTO。  
+- `system\api\constant\MailValidationMessage.java` — 邮件校验文案常量。
+
+## 8. wisepen-fudan-extension-service（全量）
+
+- `extension\fudan\FudanExtensionApplication.java` — 复旦扩展服务启动入口。  
+- `extension\fudan\exception\UISErrorCode.java` — UIS 错误码。  
+- `extension\fudan\feign\RemoteFudanExtensionService.java` — 复旦扩展 Feign 接口。  
+- `extension\fudan\enums\FudanUISTaskState.java` — UIS 任务状态枚举。  
+- `extension\fudan\cache\RedisCacheManager.java` — 扩展缓存管理。  
+- `extension\fudan\constant\MqTopicConstants.java` — 扩展域 MQ Topic 常量。  
+- `extension\fudan\controller\UISTaskController.java` — UIS 任务控制器。  
+- `extension\fudan\consumer\UISAuthRequestConsumer.java` — UIS 鉴权请求消费者。  
+- `extension\fudan\domain\mq\FudanUISAuthRequestMessage.java` — UIS 鉴权消息体。  
+- `extension\fudan\domain\dto\FudanUISTaskResultDTO.java` — UIS 任务结果 DTO。
+
+## 9. wisepen-user-service（全量）
+
+- `user\UserApplication.java` — 用户服务启动入口。  
+- `user\strategy\VerificationStrategyFactory.java` — 验证策略工厂。  
+- `user\strategy\UserVerificationStrategy.java` — 用户验证策略接口。  
+- `user\strategy\impl\FudanUISVerificationStrategy.java` — UIS 验证策略实现。  
+- `user\strategy\impl\EmailVerificationStrategy.java` — 邮箱验证策略实现。  
+- `user\service\IWalletService.java` — 钱包服务接口。  
+- `user\service\IUserService.java` — 用户服务接口。  
+- `user\exception\UserErrorCode.java` — 用户错误码。  
+- `user\exception\GroupErrorCode.java` — 小组错误码。  
+- `user\service\IGroupMemberService.java` — 小组成员服务接口。  
+- `user\service\AuthService.java` — 认证服务。  
+- `user\service\IGroupService.java` — 小组服务接口。  
+- `user\event\GroupTokenConsumeEvent.java` — 小组代币消费事件。  
+- `user\config\MybatisPlusConfig.java` — MyBatis 配置。  
+- `user\service\impl\WalletServiceImpl.java` — 钱包服务实现。  
+- `user\service\impl\UserServiceImpl.java` — 用户服务实现。  
+- `user\service\impl\GroupServiceImpl.java` — 小组服务实现。  
+- `user\service\impl\GroupMemberServiceImpl.java` — 小组成员服务实现。  
+- `user\cache\RedisCacheManager.java` — 用户域缓存管理。  
+- `user\controller\WalletController.java` — 钱包控制器。  
+- `user\controller\UserController.java` — 用户控制器。  
+- `user\consumer\TokenConsumptionConsumer.java` — 代币消费消费者。  
+- `user\controller\InternalController.java` — 内部接口控制器。  
+- `user\controller\GroupMemberController.java` — 小组成员控制器。  
+- `user\controller\AuthController.java` — 认证控制器。  
+- `user\controller\GroupController.java` — 小组控制器。  
+- `user\controller\AdminUserController.java` — 管理员用户控制器。  
+- `user\mapper\TokenVoucherMapper.java` — 兑换券 Mapper。  
+- `user\mapper\TokenTransactionRecordMapper.java` — 交易记录 Mapper。  
+- `user\mapper\GroupMemberMapper.java` — 小组成员 Mapper。  
+- `user\mapper\GroupMapper.java` — 小组 Mapper。  
+- `user\mapper\UserMapper.java` — 用户 Mapper。  
+- `user\mapper\UserProfileMapper.java` — 用户资料 Mapper。  
+- `user\mapper\UserWalletsMapper.java` — 用户钱包 Mapper。  
+- `user\domain\entity\GroupEntity.java` — 小组实体。  
+- `user\domain\entity\GroupMemberEntity.java` — 小组成员实体。  
+- `user\domain\entity\TokenTransactionRecordEntity.java` — 交易记录实体。  
+- `user\domain\entity\TokenVoucherEntity.java` — 兑换券实体。  
+- `user\domain\entity\UserWalletEntity.java` — 用户钱包实体。  
+- `user\domain\entity\UserProfileEntity.java` — 用户资料实体。  
+- `user\domain\entity\UserEntity.java` — 用户实体。  
+- `user\api\validation\ValidUsernameValidator.java` — 用户名校验器。  
+- `user\api\validation\ValidUsername.java` — 用户名校验注解。  
+- `user\api\feign\RemoteUserService.java` — 用户 Feign 对外接口。  
+- `user\api\constant\UserValidationMsg.java` — 用户校验文案常量。  
+- `user\api\constant\UserRegexPatterns.java` — 用户正则常量。  
+- `user\api\constant\MqTopicConstants.java` — 用户域 MQ Topic 常量。  
+- `user\api\constant\GroupValidationMsg.java` — 小组校验文案常量。  
+- `user\api\config\UserProperties.java` — 用户模块配置。  
+- `user\api\enums\VoucherStatus.java` — 券状态枚举。  
+- `user\api\enums\UserVerificationMode.java` — 用户验证模式枚举。  
+- `user\api\enums\TokenTransferType.java` — 代币转移类型枚举。  
+- `user\api\enums\TokenTransactionType.java` — 代币交易类型枚举。  
+- `user\api\enums\TokenPayerType.java` — 代币支付方类型枚举。  
+- `user\api\enums\Status.java` — 通用状态枚举。  
+- `user\api\enums\ModelType.java` — 模型类型枚举。  
+- `user\api\enums\GroupRoleFilter.java` — 小组角色筛选枚举。  
+- `user\api\enums\GenderType.java` — 性别枚举。  
+- `user\api\enums\DegreeLevel.java` — 学位层级枚举。  
+- `user\api\domain\mq\TokenConsumptionMessage.java` — 代币消费消息体。  
+- `user\api\domain\base\UserProfileBase.java` — 用户资料基础模型。  
+- `user\api\domain\base\UserInfoBase.java` — 用户信息基础模型。  
+- `user\api\domain\base\UserDisplayBase.java` — 用户展示基础模型。  
+- `user\api\domain\base\TokenTransactionRecordBase.java` — 交易基础模型。  
+- `user\api\domain\base\GroupMemberBase.java` — 成员基础模型。  
+- `user\api\domain\base\GroupInfoBase.java` — 小组信息基础模型。  
+- `user\api\domain\base\GroupIdentityBase.java` — 小组身份基础模型。  
+- `user\api\domain\base\GroupDisplayBase.java` — 小组展示基础模型。  
+- `user\api\domain\dto\VerificationResultDTO.java` — 验证结果 DTO。  
+- `user\api\domain\dto\res\WalletTransactionRecordResponse.java` — 钱包交易响应 DTO。  
+- `user\api\domain\dto\res\WalletDetailResponse.java` — 钱包详情响应 DTO。  
+- `user\api\domain\dto\res\UserDetailInfoResponse.java` — 用户详情响应 DTO。  
+- `user\api\domain\dto\res\GroupMemberTokenDetailResponse.java` — 成员代币详情响应 DTO。  
+- `user\api\domain\dto\res\GroupMemberDetailResponse.java` — 成员详情响应 DTO。  
+- `user\api\domain\dto\res\GroupItemInfoResponse.java` — 小组条目响应 DTO。  
+- `user\api\domain\dto\res\GroupDetailInfoResponse.java` — 小组详情响应 DTO。  
+- `user\api\domain\dto\req\AuthPwdAdminResetRequest.java` — 管理员重置密码请求 DTO。  
+- `user\api\domain\dto\req\AuthLoginRequest.java` — 登录请求 DTO。  
+- `user\api\domain\dto\req\AuthPwdResetRequest.java` — 重置密码请求 DTO。  
+- `user\api\domain\dto\req\AuthPwdResetVerifyRequest.java` — 重置验证请求 DTO。  
+- `user\api\domain\dto\req\GroupMemberKickRequest.java` — 踢出成员请求 DTO。  
+- `user\api\domain\dto\req\GroupCreateRequest.java` — 创建小组请求 DTO。  
+- `user\api\domain\dto\req\GroupMemberJoinRequest.java` — 加入小组请求 DTO。  
+- `user\api\domain\dto\req\AuthRegisterRequest.java` — 注册请求 DTO。  
+- `user\api\domain\dto\req\GroupDeleteRequest.java` — 删除小组请求 DTO。  
+- `user\api\domain\dto\req\GroupMemberTokenLimitUpdateRequest.java` — 成员代币限额更新请求 DTO。  
+- `user\api\domain\dto\req\GroupMemberRoleUpdateRequest.java` — 成员角色更新请求 DTO。  
+- `user\api\domain\dto\req\UserInfoAdminUpdateRequest.java` — 管理员用户信息更新请求 DTO。  
+- `user\api\domain\dto\req\GroupMemberQuitRequest.java` — 退出小组请求 DTO。  
+- `user\api\domain\dto\req\GroupUpdateRequest.java` — 小组更新请求 DTO。  
+- `user\api\domain\dto\req\UserInfoUpdateRequest.java` — 用户信息更新请求 DTO。  
+- `user\api\domain\dto\req\WalletTransferTokenRequest.java` — 代币转账请求 DTO。  
+- `user\api\domain\dto\req\WalletRedeemVoucherRequest.java` — 券兑换请求 DTO。  
+- `user\api\domain\dto\req\UserProfileUpdateRequest.java` — 用户资料更新请求 DTO。  
+- `user\api\domain\dto\req\UserProfileAdminUpdateRequest.java` — 管理员资料更新请求 DTO。
+

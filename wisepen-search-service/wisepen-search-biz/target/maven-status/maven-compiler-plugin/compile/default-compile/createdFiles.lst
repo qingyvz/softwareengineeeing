@@ -1,0 +1,6 @@
+com\oriole\wisepen\search\service\impl\SearchQueryServiceImpl.class
+com\oriole\wisepen\search\controller\SearchController.class
+com\oriole\wisepen\search\SearchApplication.class
+com\oriole\wisepen\search\domain\entity\SearchIndexEntity.class
+com\oriole\wisepen\search\domain\entity\SearchIndexEntity$SearchIndexEntityBuilder.class
+com\oriole\wisepen\search\repository\SearchIndexRepository.class

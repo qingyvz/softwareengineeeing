@@ -1,0 +1,9 @@
+D:\fudan\4_semester\SoftwareEngineering\WisePenCloud\wisepen-search-service\wisepen-search-api\src\main\java\com\oriole\wisepen\search\domain\base\SearchHitBase.java
+D:\fudan\4_semester\SoftwareEngineering\WisePenCloud\wisepen-search-service\wisepen-search-api\src\main\java\com\oriole\wisepen\search\enums\SearchSortBy.java
+D:\fudan\4_semester\SoftwareEngineering\WisePenCloud\wisepen-search-service\wisepen-search-api\src\main\java\com\oriole\wisepen\search\enums\SearchTargetType.java
+D:\fudan\4_semester\SoftwareEngineering\WisePenCloud\wisepen-search-service\wisepen-search-api\src\main\java\com\oriole\wisepen\search\domain\dto\req\SearchQueryReqDTO.java
+D:\fudan\4_semester\SoftwareEngineering\WisePenCloud\wisepen-search-service\wisepen-search-api\src\main\java\com\oriole\wisepen\search\constant\SearchValidationMsg.java
+D:\fudan\4_semester\SoftwareEngineering\WisePenCloud\wisepen-search-service\wisepen-search-api\src\main\java\com\oriole\wisepen\search\constant\SearchConstants.java
+D:\fudan\4_semester\SoftwareEngineering\WisePenCloud\wisepen-search-service\wisepen-search-api\src\main\java\com\oriole\wisepen\search\domain\dto\res\SearchResultResDTO.java
+D:\fudan\4_semester\SoftwareEngineering\WisePenCloud\wisepen-search-service\wisepen-search-api\src\main\java\com\oriole\wisepen\search\domain\dto\res\SearchHitItemResDTO.java
+D:\fudan\4_semester\SoftwareEngineering\WisePenCloud\wisepen-search-service\wisepen-search-api\src\main\java\com\oriole\wisepen\search\feign\RemoteSearchService.java

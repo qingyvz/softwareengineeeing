@@ -1,0 +1,34 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+.pnpm-store/
+node_modules
+dist
+dist-ssr
+*.local
+
+# Local env overrides (shared env files like .env.development / .env.production 仍入库)
+.env.local
+.env.*.local
+
+# Editor directories and files
+.vscode/*
+*.code-workspace
+!.vscode/extensions.json
+.idea
+.DS_Store
+.cursorrules
+.cursorignore
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+docs/

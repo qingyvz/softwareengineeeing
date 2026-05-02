@@ -1,0 +1,2 @@
+任务1：传统搜索
+散：要不要在MqTopicConstants里加一个搜索

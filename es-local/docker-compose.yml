@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  elasticsearch:
+    image: elasticsearch:8.12.2
+    container_name: wisepen-es-local
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false # 关闭本地密码，方便开发
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m # 限制内存，防止卡顿
+    ports:
+      - "9200:9200"
+      - "9300:9300"

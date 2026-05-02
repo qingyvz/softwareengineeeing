@@ -1,0 +1,93 @@
+// src/components/ChatPanel/style.module.less
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  background-color: var(--ant-color-bg-layout); // 整体背景偏灰一点，区分侧边栏
+  overflow: hidden; // 防止整体出现滚动条
+}
+
+// 顶部栏
+.header {
+  height: 60px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--ant-padding-lg);
+  border-bottom: 1px solid var(--ant-color-border-secondary);
+  background-color: var(--ant-color-bg-container);
+
+  &.collapsedHeader {
+    justify-content: flex-start;
+    padding: 0 10px;
+  }
+
+  .headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .triggerBtn {
+    font-size: 18px;
+    border: none;
+    background: transparent;
+    padding: 4px;
+    border-radius: var(--ant-border-radius);
+    color: var(--ant-color-text-secondary);
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      color: var(--ant-color-text);
+      background: var(--ant-color-fill-tertiary);
+    }
+  }
+
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ant-color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .titleWrap {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 2px;
+  }
+
+  .sessionMeta {
+    font-size: 12px;
+    line-height: 1;
+    color: var(--ant-color-text-tertiary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+  }
+}
+
+// 中间内容区 (MessageList)
+.content {
+  flex: 1; // 占据剩余所有空间
+  min-height: 0; // 关键！防止 Flex 子项溢出导致滚动失效
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+// 底部输入区 (ChatInput)
+.footer {
+  flex-shrink: 0; // 防止被挤压
+  z-index: 10;
+  // 背景渐变，让输入框看起来像浮在内容上
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, var(--ant-color-bg-layout) 20%);
+}

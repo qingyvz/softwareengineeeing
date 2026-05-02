@@ -1,0 +1,82 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "1. System (系统核心)",
+            "request": "launch",
+            "mainClass": "com.oriole.wisepen.system.SystemApplication",
+            "projectName": "wisepen-system-biz",
+            "vmArgs": ["-javaagent:D:/fudan/4_semester/SoftwareEngineering/WisePenCloud/opentelemetry-javaagent.jar", "-Dspring.profiles.active=dev"],
+            "env": { "SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR": "wisepen-dev-server:8848", "SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR": "wisepen-dev-server:8848", "NACOS_USERNAME": "nacos", "NACOS_PASSWORD": "oriole003" }
+        },
+        {
+            "type": "java",
+            "name": "2. User (用户中心)",
+            "request": "launch",
+            "mainClass": "com.oriole.wisepen.user.UserApplication",
+            "projectName": "wisepen-user-biz",
+            "vmArgs": ["-javaagent:D:/fudan/4_semester/SoftwareEngineering/WisePenCloud/opentelemetry-javaagent.jar", "-Dspring.profiles.active=dev"],
+            "env": { "SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR": "wisepen-dev-server:8848", "SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR": "wisepen-dev-server:8848", "NACOS_USERNAME": "nacos", "NACOS_PASSWORD": "oriole003" }
+        },
+        {
+            "type": "java",
+            "name": "3. FileStorage (文件存储)",
+            "request": "launch",
+            "mainClass": "com.oriole.wisepen.file.storage.FileStorageApplication",
+            "projectName": "wisepen-file-storage-biz",
+            "vmArgs": ["-javaagent:D:/fudan/4_semester/SoftwareEngineering/WisePenCloud/opentelemetry-javaagent.jar", "-Dspring.profiles.active=dev"],
+            "env": { "SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR": "wisepen-dev-server:8848", "SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR": "wisepen-dev-server:8848", "NACOS_USERNAME": "nacos", "NACOS_PASSWORD": "oriole003" }
+        },
+        {
+            "type": "java",
+            "name": "4. Document (文档处理)",
+            "request": "launch",
+            "mainClass": "com.oriole.wisepen.document.DocumentApplication",
+            "projectName": "wisepen-document-biz",
+            "vmArgs": ["-javaagent:D:/fudan/4_semester/SoftwareEngineering/WisePenCloud/opentelemetry-javaagent.jar", "-Dspring.profiles.active=dev"],
+            "env": { "SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR": "wisepen-dev-server:8848", "SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR": "wisepen-dev-server:8848", "NACOS_USERNAME": "nacos", "NACOS_PASSWORD": "oriole003" }
+        },
+        {
+            "type": "java",
+            "name": "5. Note (笔记服务)",
+            "request": "launch",
+            "mainClass": "com.oriole.wisepen.note.NoteApplication",
+            "projectName": "wisepen-note-biz",
+            "vmArgs": ["-javaagent:D:/fudan/4_semester/SoftwareEngineering/WisePenCloud/opentelemetry-javaagent.jar", "-Dspring.profiles.active=dev"],
+            "env": { "SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR": "wisepen-dev-server:8848", "SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR": "wisepen-dev-server:8848", "NACOS_USERNAME": "nacos", "NACOS_PASSWORD": "oriole003" }
+        },
+        {
+            "type": "java",
+            "name": "6. Resource (资源管理)",
+            "request": "launch",
+            "mainClass": "com.oriole.wisepen.resource.ResPermissionApplication",
+            "projectName": "wisepen-resource-biz",
+            "vmArgs": ["-javaagent:D:/fudan/4_semester/SoftwareEngineering/WisePenCloud/opentelemetry-javaagent.jar", "-Dspring.profiles.active=dev"],
+            "env": { "SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR": "wisepen-dev-server:8848", "SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR": "wisepen-dev-server:8848", "NACOS_USERNAME": "nacos", "NACOS_PASSWORD": "oriole003" }
+        },
+        {
+            "type": "java",
+            "name": "7. Fudan (复旦扩展)",
+            "request": "launch",
+            "mainClass": "com.oriole.wisepen.extension.fudan.FudanExtensionApplication",
+            "projectName": "wisepen-fudan-extension-biz",
+            "vmArgs": ["-javaagent:D:/fudan/4_semester/SoftwareEngineering/WisePenCloud/opentelemetry-javaagent.jar", "-Dspring.profiles.active=dev"],
+            "env": { "SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR": "wisepen-dev-server:8848", "SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR": "wisepen-dev-server:8848", "NACOS_USERNAME": "nacos", "NACOS_PASSWORD": "oriole003" }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "🚀 启动 WisePenCloud 全套后端",
+            "configurations": [
+                "1. System (系统核心)",
+                "2. User (用户中心)",
+                "3. FileStorage (文件存储)",
+                "4. Document (文档处理)",
+                "5. Note (笔记服务)",
+                "6. Resource (资源管理)",
+                "7. Fudan (复旦扩展)"
+            ]
+        }
+    ]
+}
