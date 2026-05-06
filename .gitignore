@@ -1,0 +1,10 @@
+# 忽略 IDE 配置文件
+.idea/
+*.iml
+
+# 忽略本地数据库与运行数据 (非常重要)
+es-local/mongo-data/
+es-local/mysql-data/
+
+# 如果你整个 es-local 文件夹里都是本地运行环境，不需要上传，
+# 你可以直接只写一行 es-local/ 把整个文件夹忽略掉。

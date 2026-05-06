@@ -5,20 +5,56 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7be42a6b-4a08-424e-b477-e4f42c6502cd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/大二下.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ai_H/PJ_1/MaxPoolingLayer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../prompt/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../prompt/optimizer/GeminiOptimizer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../prompt/optimizer/SiliconFlowOptimizer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../prompt/optimizer/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../prompt/prompt_optimizer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../prompt/prompts/temple_1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../prompt/prompts/temple_2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../prompt/prompts/temple_3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../prompt/prompts/temple_5" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WisePenCloud/dev.properties.example" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WisePenCloud/docker-compose-app.yml" beforeDir="false" afterPath="$PROJECT_DIR$/WisePenCloud/docker-compose-app.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WisePenView/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/WisePenView/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/es-local/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/src/main/java/com/oriole/wisepen/search/constant/SearchConstants.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/src/main/java/com/oriole/wisepen/search/constant/SearchValidationMsg.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/src/main/java/com/oriole/wisepen/search/domain/base/SearchHitBase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/src/main/java/com/oriole/wisepen/search/domain/dto/req/SearchQueryReqDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/src/main/java/com/oriole/wisepen/search/domain/dto/res/SearchHitItemResDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/src/main/java/com/oriole/wisepen/search/domain/dto/res/SearchResultResDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/src/main/java/com/oriole/wisepen/search/enums/SearchSortBy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/src/main/java/com/oriole/wisepen/search/enums/SearchTargetType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/src/main/java/com/oriole/wisepen/search/feign/RemoteSearchService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/target/classes/com/oriole/wisepen/search/domain/dto/req/SearchQueryReqDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/target/classes/com/oriole/wisepen/search/domain/dto/res/SearchHitItemResDTO$SearchHitItemResDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/target/classes/com/oriole/wisepen/search/domain/dto/res/SearchHitItemResDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/target/classes/com/oriole/wisepen/search/enums/SearchTargetType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-api/target/wisepen-search-api-1.0.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/SearchApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/config/ElasticsearchConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/config/SearchProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/controller/InternalSearchController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/controller/SearchController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/domain/entity/SearchIndexEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/exception/SearchErrorCode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/mq/DocumentParseTaskConsumer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/mq/NoteSnapshotConsumer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/mq/ResourceEventConsumer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/repository/SearchIndexRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/service/ISearchQueryService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/service/ISearchSyncService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/service/impl/SearchQueryServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/service/impl/SearchSyncServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/java/com/oriole/wisepen/search/task/IndexRebuildTask.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/resources/application-dev.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/src/main/resources/bootstrap.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/target/classes/application-dev.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/target/classes/bootstrap.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/target/classes/com/oriole/wisepen/search/SearchApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/target/classes/com/oriole/wisepen/search/controller/SearchController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/target/classes/com/oriole/wisepen/search/domain/entity/SearchIndexEntity$SearchIndexEntityBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/target/classes/com/oriole/wisepen/search/domain/entity/SearchIndexEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/target/classes/com/oriole/wisepen/search/repository/SearchIndexRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/target/classes/com/oriole/wisepen/search/service/impl/SearchQueryServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/wisepen-search-service/wisepen-search-biz/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +62,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -46,10 +82,11 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/fudan/4_semester/SoftwareEngineering",
+    "last_opened_file_path": "D:/大二下/softwareengineeeing",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",

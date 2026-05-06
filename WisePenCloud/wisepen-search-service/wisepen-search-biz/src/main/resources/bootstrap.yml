@@ -1,0 +1,33 @@
+server:
+  port: 9310
+
+spring:
+  application:
+    name: wisepen-search-service
+  profiles:
+    active: dev
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: wisepen-dev-server:8848
+        username: nacos
+        password: oriole003
+      config:
+        server-addr: wisepen-dev-server:8848
+        username: nacos
+        password: oriole003
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        shared-configs:
+          - data-id: wisepen-common-dev.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+
+  # 【关键】只保留这一个 Elasticsearch 配置块！
+  elasticsearch:
+    uris: http://wisepen-dev-server:9200
+    username: elastic
+    password: root
+    connection-timeout: 5s
+    socket-timeout: 30s

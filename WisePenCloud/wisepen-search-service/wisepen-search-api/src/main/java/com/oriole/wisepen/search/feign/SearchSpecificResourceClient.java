@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
  * 它可以把 DTO 对象里的属性，转换为 ?resourceId=xxx&userId=-1 的形式，
  * 完美迎合上游的参数绑定机制，不改动上游任何代码！
  */
-// 1. 改掉 contextId，避免和降级类冲突
-@FeignClient(contextId = "searchResourceClient", value = "wisepen-resource-service")
-// 2. 接口名字去掉 Fallback，它是个纯粹的 Client
-public interface SearchResourceClient {
+// 1. 把 contextId 改成一个非常特殊的名字
+@FeignClient(
+        contextId = "searchSpecificResourceClient",
+        value = "wisepen-resource-service"
+)
+// 2. 把接口名也改掉，对应上面
+public interface SearchSpecificResourceClient {
 
     @PostMapping("/internal/resource/getResourceInfo")
     R<ResourceItemResponse> getResourceInfo(@SpringQueryMap ResourceInfoGetReqDTO dto);

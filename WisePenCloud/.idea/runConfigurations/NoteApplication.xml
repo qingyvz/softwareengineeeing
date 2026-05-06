@@ -1,5 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="NoteApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <envs>
+      <env name="NACOS_SERVER_ADDR" value="wisepen-dev-server:8848" />
+      <env name="NACOS_USERNAME" value="nacos" />
+      <env name="NACOS_PASSWORD" value="oriole003" />
+    </envs>
     <module name="wisepen-note-biz" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.oriole.wisepen.note.NoteApplication" />
     <option name="VM_PARAMETERS" value="-javaagent:$ProjectFileDir$/opentelemetry-javaagent.jar -Dotel.service.name=wisepen-note-service -Dotel.traces.sampler=always_on" />

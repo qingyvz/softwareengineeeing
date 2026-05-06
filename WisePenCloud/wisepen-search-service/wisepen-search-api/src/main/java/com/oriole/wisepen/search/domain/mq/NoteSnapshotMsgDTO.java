@@ -1,4 +1,4 @@
-package com.oriole.wisepen.search.domain.dto.mq;
+package com.oriole.wisepen.search.domain.mq;
 
 import lombok.Data;
 import java.time.LocalDateTime;

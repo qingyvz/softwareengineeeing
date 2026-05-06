@@ -1,8 +1,0 @@
-spring:
-  elasticsearch:
-    # 指向你本地刚刚用 Docker 跑起来的 ES 地址
-    uris: http://127.0.0.1:9200 
-    
-    # 连接超时设置（本地开发建议设长一点）
-    connection-timeout: 3s
-    socket-timeout: 30s

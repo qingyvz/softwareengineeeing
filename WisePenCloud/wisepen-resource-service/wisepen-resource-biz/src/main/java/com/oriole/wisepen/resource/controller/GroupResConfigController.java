@@ -23,6 +23,7 @@ public class GroupResConfigController {
 
     private final IGroupResService groupResService;
 
+
     @Operation(summary = "获取小组资源配置", description = "小组成员可查询，查不到时默认返回 FOLDER 模式")
     @GetMapping("/getConfig")
     public R<GroupResConfigResponse> getConfig(@RequestParam("groupId") String groupId) {
