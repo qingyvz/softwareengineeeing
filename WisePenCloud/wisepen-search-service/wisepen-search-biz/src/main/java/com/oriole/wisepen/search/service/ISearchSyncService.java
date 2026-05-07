@@ -40,4 +40,14 @@ public interface ISearchSyncService {
      * @param id ES 中的文档 ID
      */
     void deleteIndex(String id);
+
+    /**
+     * 全量更新索引 (同时包含内容与权限元数据，防权限真空)
+     */
+    void upsertFullIndex(SearchIndexEntity entity);
+
+    public void rebuildDocumentIndex();
+
+
+   public void rebuildNoteIndex();
 }

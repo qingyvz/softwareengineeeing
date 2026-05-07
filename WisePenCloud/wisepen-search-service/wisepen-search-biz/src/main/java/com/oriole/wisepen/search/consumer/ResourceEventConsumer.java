@@ -1,4 +1,4 @@
-package com.oriole.wisepen.search.mq;
+package com.oriole.wisepen.search.consumer;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
