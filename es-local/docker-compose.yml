@@ -31,39 +31,39 @@ services:
     networks:
       - wisepen-net
 
-  # 3. 关系型数据库 MySQL 8.0
-  mysql:
-    image: mysql:8.0
-    container_name: wisepen-mysql-local
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=wisepen_cloud # 自动创建一个默认库
-      - TZ=Asia/Shanghai
-    ports:
-      - "3307:3306"
-    volumes:
-      # 将初始化脚本放在 ./mysql-init 目录下，容器首次启动会自动执行里面的 .sql 文件造假数据
-      - ./mysql-init:/docker-entrypoint-initdb.d
-      - ./mysql-data:/var/lib/mysql
-    networks:
-      - wisepen-net
+  # # 3. 关系型数据库 MySQL 8.0
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: wisepen-mysql-local
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=root
+  #     - MYSQL_DATABASE=wisepen_cloud # 自动创建一个默认库
+  #     - TZ=Asia/Shanghai
+  #   ports:
+  #     - "3307:3306"
+  #   volumes:
+  #     # 将初始化脚本放在 ./mysql-init 目录下，容器首次启动会自动执行里面的 .sql 文件造假数据
+  #     - ./mysql-init:/docker-entrypoint-initdb.d
+  #     - ./mysql-data:/var/lib/mysql
+  #   networks:
+  #     - wisepen-net
 
-  # 4. 文档型数据库 MongoDB 6.0
-  mongodb:
-    image: mongo:6.0
-    container_name: wisepen-mongo-local
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=root
-      - TZ=Asia/Shanghai
-    ports:
-      - "27017:27017"
-    volumes:
-      # 挂载 Mongo 初始化脚本 (如果需要)
-      - ./mongo-init:/docker-entrypoint-initdb.d
-      - ./mongo-data:/data/db
-    networks:
-      - wisepen-net
+  # # 4. 文档型数据库 MongoDB 6.0
+  # mongodb:
+  #   image: mongo:6.0
+  #   container_name: wisepen-mongo-local
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=root
+  #     - MONGO_INITDB_ROOT_PASSWORD=root
+  #     - TZ=Asia/Shanghai
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     # 挂载 Mongo 初始化脚本 (如果需要)
+  #     - ./mongo-init:/docker-entrypoint-initdb.d
+  #     - ./mongo-data:/data/db
+  #   networks:
+  #     - wisepen-net
 
 networks:
   wisepen-net:

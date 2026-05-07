@@ -1,16 +1,18 @@
 server:
-  port: 9310
+  port: 9500
+  tomcat:
+    connection-timeout: 60000
+    accept-count: 100
 
 spring:
   application:
-    name: wisepen-search-service
+    name: wisepen-document-service
   main:
     allow-bean-definition-overriding: true
 
-  mvc:
-    log-request-details: true
-
-  # 1. 连接远程开发环境的 Nacos (获取公共配置和注册服务)
+  # =========================================================
+  # 🌐 1. 连接远程开发环境的 Nacos (强行指定远程地址)
+  # =========================================================
   cloud:
     nacos:
       discovery:
@@ -28,19 +30,32 @@ spring:
             group: DEFAULT_GROUP
             refresh: true
 
-  # 2. 连接本地 Docker 的 Elasticsearch (带 IK 分词器，无密码)
-  elasticsearch:
-    uris: http://127.0.0.1:9200
-    # 因为你的 docker-compose 里写了 xpack.security.enabled=false
-    # 所以这里绝对不能写 username 和 password！
-    connection-timeout: 5s
-    socket-timeout: 30s
+    inetutils:
+      ignored-interfaces: [VMnet.*, vEthernet.*, docker0]
+      preferred-networks: [10] # 注意：如果你们 Nacos 报错，这行可能需要注释掉，因为它限制了只绑定 10.x 网段的内网 IP
 
-# 临时开启追踪日志，查完问题可以删掉
+  profiles:
+    active: dev
+
+  # =========================================================
+  # 🚀 2. 补上连接远程开发环境的 Kafka
+  # （文档服务要把解析好的消息发出去，必须配 Kafka）
+  # =========================================================
+  kafka:
+    bootstrap-servers: wisepen-dev-server:9094
+
+# =========================================================
+# 📄 3. 远端文档格式转换服务 (指向公共开发服务器)
+# =========================================================
+jodconverter:
+  local:
+    enabled: false
+  remote:
+    enabled: true
+    url: http://wisepen-dev-server:8100/
+
 logging:
   level:
-    org.springframework.web: TRACE
-    org.springframework.web.servlet.DispatcherServlet: DEBUG
-    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
-
-
+    root: INFO
+    org.jodconverter: DEBUG
+    com.oriole.wisepen.file: INFO

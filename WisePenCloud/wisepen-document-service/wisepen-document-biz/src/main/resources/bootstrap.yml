@@ -30,6 +30,14 @@ spring:
       preferred-networks: [10]
   profiles:
     active: dev
+  # 解释：Nacos 里的配置大概率写的是内部容器名 (如 kafka:9092)。
+  # 你在本地跑，必须强行覆盖为开发服务器的外网透传端口 (9094)，否则连不上 MQ！
+
+  kafka:
+      bootstrap-servers: wisepen-dev-server:9094
+
+
+
   
 jodconverter:
   local:
@@ -44,3 +52,4 @@ logging:
     root: INFO
     org.jodconverter: DEBUG
     com.oriole.wisepen.file: INFO
+

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.oriole.wisepen.search.service.ISearchSyncService;
 
 /**
  * 全局搜索外部接口 (供前端调用)
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchController {
 
     private final ISearchQueryService searchQueryService;
+    private final ISearchSyncService searchSyncService;
 
     /**
      * 执行全局聚合搜索
@@ -41,5 +43,18 @@ public class SearchController {
         SearchResultResDTO result = searchQueryService.executeGlobalSearch(reqDTO);
 
         return R.ok(result);
+    }
+
+    @PostMapping("/admin/init/all")
+    @Log(title = "脚本触发重建全量索引", businessType = BusinessType.OTHER, isSaveRequestData = false)
+    public R<String> initAllIndex() {
+        // 剥离应用层鉴权，信任网关透传
+        java.util.concurrent.CompletableFuture.runAsync(() -> {
+//            log.warn("【运维操作】接收到全量 ES 索引重建指令，开始执行...");
+            searchSyncService.rebuildDocumentIndex();
+            // searchSyncService.rebuildNoteIndex(); // 如果有笔记服务，取消注释
+        });
+
+        return R.ok("全量重建任务已接收，正在后台异步拉取库表数据，请观察日志...");
     }
 }
