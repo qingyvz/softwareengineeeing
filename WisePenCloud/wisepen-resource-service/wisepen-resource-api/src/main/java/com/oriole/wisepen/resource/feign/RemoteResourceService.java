@@ -6,9 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import com.oriole.wisepen.common.core.domain.R;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -38,5 +36,8 @@ public interface RemoteResourceService {
     @Operation(summary = "解散小组", description = "软删除小组下的 Tag 树与资源配置，30 天后由定时任务彻底清理")
     @PostMapping("/internal/resource/dissolveGroup")
     R<Void> dissolveGroup(@RequestParam("groupId") Long groupId);
+
+    @GetMapping("/internal/resource/getRawInfo/{resourceId}")
+    R<ResourceItemResponse> getRawResourceInfo(@PathVariable("resourceId") String resourceId);
 
 }

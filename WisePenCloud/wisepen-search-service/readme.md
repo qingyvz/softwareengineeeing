@@ -131,6 +131,68 @@
   
 
 
+---
+
+### 📦 一、核心数据载体 (Data Wrappers)
+这些类定义了微服务与前端交互的“绝对契约”。
+
+*   **`R<T>` (统一响应体)**
+    *   **作用**：包裹所有 Controller 的返回值。
+    *   **设计亮点**：内部封装了 `code`, `msg`, `data`。严禁手动硬编码状态码，必须配合 `IErrorCode`（如 `ResultCode.SUCCESS`）使用。
+    *   **常用写法**：`R.ok(data)` 或 `R.fail(ResultCode.PARAM_ERROR)`.
+*   **`PageResult<T>` (统一分页实体)**
+    *   **作用**：标准化的分页数据载体。
+    *   **设计亮点**：内部包含了 `list` (数据) 和 `total`, `page`, `size`, `totalPage` (元数据)。封装了 `Math.ceil` 计算总页数的逻辑，前端可直接对接分页组件。
+
+### 🛡️ 二、安全与上下文 (Security & Context)
+这是整个系统鉴权和数据隔离的灵魂，基于 `TransmittableThreadLocal` (TTL) 实现，完美解决了异步线程池传递上下文丢失的问题。
+
+*   **`SecurityContextHolder` (安全上下文持有器)**
+    *   **作用**：在当前线程中随时获取当前登录用户的信息。
+    *   **核心方法**：`getUserId()`, `getIdentityType()`, `getGroupRoleMap()`。
+    *   **红线规约**：如果在 MQ 消费者或异步任务中**手动** `setUserId()`，任务结束时**必须**调用 `remove()`，否则会导致严重的线程池数据污染与越权！
+*   **`SecurityConstants` (安全常量池)**
+    *   **作用**：统一定义网关透传过来的 HTTP Header 名称（如 `X-User-Id`, `X-Identity-Type`）和内部调用标识 `X-From-Source`。
+*   **`@CheckLogin` / `@CheckRole` (鉴权注解)**
+    *   **作用**：打在 Controller 方法上，配合 `SecurityAspect` 切面，实现声明式的方法级拦截。
+
+### 🔌 三、微服务通信基建 (RPC & Web)
+解决微服务之间互相调用（Feign）时的身份丢失与路由问题。
+
+*   **`FeignRequestInterceptor` (Feign 透传拦截器)**
+    *   **作用**：当 A 服务通过 Feign 调用 B 服务时，它会自动把当前线程中的 `X-From-Source` 和灰度标记（Gray Tag）塞进请求头里。
+    *   **价值**：实现了内部调用的“免密穿透”和“灰度流量隔离”，业务代码对传递 Token 零感知。
+*   **`HeaderInterceptor` (Web 入口拦截器)**
+    *   **作用**：处于每个微服务的最前线，负责把网关传来的 Header 解析并塞入 `SecurityContextHolder`。
+
+### 🚨 四、异常与容错兜底 (Exception Handling)
+消灭满天飞的 `try-catch` 和 `RuntimeException`。
+
+*   **`GlobalExceptionHandler` (全局异常捕获器)**
+    *   **作用**：拦截所有到达 Controller 层的异常，并转换为友好的 `R.fail()` 格式返回给前端，防止把堆栈信息暴露给用户。
+*   **`ServiceException` (业务异常基类)**
+    *   **作用**：业务逻辑执行不下去时（如“资源不存在”、“余额不足”），直接 `throw new ServiceException(ErrorCode)`。
+*   **`IErrorCode` (错误码契约接口)**
+    *   **作用**：强制各业务模块（如搜索模块的 `SearchErrorCode`，权限模块的 `PermissionErrorCode`）实现此接口，实现错误码的强类型管理。
+
+### 📝 五、日志与行为审计 (Logging & Audit)
+实现非侵入式的防爆库日志记录。
+
+*   **`@Log` (业务日志注解)**
+    *   **作用**：打在核心修改/查询接口上，自动拦截请求参数、响应时间、操作人 IP。
+    *   **设计亮点**：提供了 `isSaveRequestData` 和 `isSaveResponseData` 属性。对于上传文件、拉取全量列表、全文检索等操作，可设为 `false` 防止撑爆 `sys_oper_log` 表。
+*   **`AsyncLogService` (异步日志服务)**
+    *   **作用**：将解析好的日志扔进异步线程池落库，保证日志记录**绝对不阻塞**主业务流程。
+
+### 🚦 六、统一枚举底座 (Global Enums)
+统一全系统的魔法值，配合 MyBatis-Plus 和 Jackson 实现自动转换。
+
+*   **`GroupRoleType`**: 定义了小组角色的阶级（`OWNER=0`, `ADMIN=1`, `MEMBER=2`），带有 `@EnumValue` 和 `@JsonValue`，进出库/前后端交互自动转数字。
+*   **`IdentityType`**: 定义全局身份（学生、老师、管理员）。
+*   **`BusinessType`**: 统一定义 `@Log` 的操作类型（如 INSERT, UPDATE, SELECT, DELETE）。
+
+---
+
 
   非常理解！从传统的 MySQL 增删改查（CRUD），突然跳跃到**“基于 Kafka 同步的 Elasticsearch 全文搜索”**，思维上确实需要一个转换的过程。
 
@@ -398,3 +460,70 @@ Elasticsearch 搜索极快的秘密在于它改变了寻找数据的方式。
 
 **一句话总结：**
 **Producer** 往 **Topic** 的各个 **Partition** 里塞数据，**Consumer** 组成 **Group** 按照 **Offset** 的标记去拉数据。这种解耦设计让 Kafka 能够扛住每秒百万级的超高并发。
+
+
+
+这是一份为你量身定制的**《聚合搜索全链路数据同步与重构总结报告》**。你可以直接将其作为本次迭代的 `Release Note`（发布说明）或提交到团队的 Wiki/技术文档库中。
+
+***
+
+# 🚀 聚合搜索微服务全链路数据同步重构与落地总结
+
+## 📝 迭代概述
+本次迭代成功打通了 **WisePenCloud 聚合搜索架构**中最复杂的一环：跨越 `Document` (文档)、`Resource` (资源) 和 `Search` (搜索) 三大微服务，实现了异构数据的全量/增量实时同步。彻底解决了深分页权限过滤、MQ 大文本传输 OOM 以及内部接口鉴权冲突等一系列架构级难题。
+
+---
+
+## 🌟 重点回顾：文档微服务 (Document Service) 的底层重构
+
+在本次迭代中，我们对文档微服务进行了至关重要的**“防御性重构”**。
+
+### 1. 核心痛点与架构隐患
+原有的设计思路是：文档解析完成后，将几十页 PDF 提取出的**海量纯文本（可能高达数 MB）**直接放入 `DocumentReadyMessage` 并通过 Kafka 发送。
+> **架构风险**：直接触碰 Kafka 默认的 1MB 消息体上限导致发送失败；且在并发高峰期，极易导致 Search 消费者在反序列化时内存被打爆（OOM）。
+
+### 2. 重构方案：引入“凭证提取模式 (Claim Check Pattern)”
+我们废弃了通过 MQ 传递大文本的做法，将其改为：**MQ 只负责传递轻量级的信号（ID），由消费端主动回源拉取数据**。为此，在文档微服务中做了以下关键修改：
+
+*   **新增跨域传输 DTO**：在 `wisepen-document-api` 中定义了 `DocumentContentDTO`，专用于封装纯净的正文数据。
+*   **开放内部“上帝”接口**：在 `wisepen-document-biz` 新增 `InternalDocumentController`，**绕过繁重的业务逻辑，直接穿透到底层 MongoDB (`DocumentContentRepository`)**，提供支持游标分页的长文本拉取能力。
+*   **发布 Feign 契约**：新增 `RemoteDocumentService` 供搜索微服务发起内部 RPC 调用。
+
+**✨ 重构收益**：彻底根除了 MQ 阻塞与 OOM 隐患，同时实现了数据的**读写分离与介质解耦**。
+
+---
+
+## 🛡️ 资源微服务 (Resource Service) 的 ACL 降维适配
+
+*   **排查出的问题**：最初复用原有的 `getResourceInfo` 接口时，遭遇了 `50102 (权限被拒绝)` 和 `50101 (标签不存在)` 的连环阻断。原因是原接口属于“用户试图（View Model）”，自带极其严格的前台业务校验。
+*   **重构方案**：在 `InternalResourceItemController` 中开辟免检通道。直接利用 `ResourceItemRepository` 查库，并进行**权限降维**：
+    *   将 `GroupTagBind` (对象列表) 降维提取为供 ES 使用的 Tag ID 集合。
+    *   将 `SpecifiedUsersGrantedActionsMask` (掩码 Map) 降维提取为具备访问权限的 `userId` 集合。
+    *   强行剥离 OwnerID，确保资源所有者绝对不会遭遇“权限真空”。
+
+---
+
+## ⚙️ 搜索微服务 (Search Service) 的组装与落地
+
+搜索微服务作为整个大数据的“聚合中枢”，完成了最高难度的拼装与落库动作：
+
+1.  **高健壮性 Kafka 消费者 (`DocumentReadyConsumer`)**：
+    *   利用 `try-finally` 结构，完美遵守安全规约，强制执行 `SecurityContextHolder.remove()` 防止线程池越权污染。
+    *   在后台异步线程中，主动模拟 `SYSTEM_USER_ID = 0` (系统管理员身份)，完美绕过了 Spring `@Validated` 和 Feign 的层层防线。
+2.  **异步防超时的全量跑批引擎 (`IndexRebuildTask` & Admin API)**：
+    *   摒弃了 Controller 层的长轮询。使用 `CompletableFuture.runAsync()` 提供后台静默重建能力，彻底杜绝网关 504 超时。
+    *   使用分批游标机制 (`pageSize=50`)，兼顾了同步速度与内存安全。
+3.  **精细化 ES 更新机制 (`upsertFullIndex`)**：
+    *   引入 `doc_as_upsert` 机制，结合 `ElasticsearchOperations.update`，实现了对 ES 数据的**原子性精准覆盖**。避免了传统 `save()` 方法引发的权限或内容互相洗除的致命漏洞。
+4.  **排雷小插曲**：
+    *   修复了 Java 经典的基础类型包装类缓存池问题（将 `!=` 替换为 `.equals()`，精准判断 `Integer 200` 状态码）。
+
+---
+
+## 🎯 最终交付成果
+
+*   [x] 本地与远程混合调试（Nacos / Kafka / MongoDB）全面跑通。
+*   [x] 成功利用 Kibana (`/_cat/indices` & `/_search`) 验证了全量异构数据聚合入库（含真实的长文本与 ACL 白名单）。
+*   [x] 外部搜索接口 `/search/global` 配合网关 Headers 伪装（指定 `X-User-Id`），成功触发底层权限验证并实现高亮全文检索！
+
+**👨‍💻 结语**：本次重构为系统构建了一道坚固的护城河。数据不仅进得去，搜得快，更做到了**权限隔离滴水不漏**。这是一次教科书级别的微服务高并发与数据一致性架构实践！

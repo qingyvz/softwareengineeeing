@@ -13,8 +13,8 @@ services:
       - "9200:9200"
       - "9300:9300"
     volumes:
-      - ./ik:/usr/share/elasticsearch/plugins/ik
-      - ./es-data:/usr/share/elasticsearch/data
+      # - ./ik:/usr/share/elasticsearch/plugins/ik
+      - es_data:/usr/share/elasticsearch/data
     networks:
       - wisepen-net
 
@@ -68,3 +68,5 @@ services:
 networks:
   wisepen-net:
     driver: bridge
+volumes:
+  es_data:  # 声明这个卷由 Docker 自动管理

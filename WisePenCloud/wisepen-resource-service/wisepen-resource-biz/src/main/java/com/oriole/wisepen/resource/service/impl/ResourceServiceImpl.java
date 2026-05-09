@@ -866,4 +866,45 @@ public class ResourceServiceImpl implements IResourceService {
             result.grantedActionsMask = node.getGrantedActionsMask();
         }
     }
+
+    @Override
+    public ResourceItemResponse getSystemRawResourceInfo(String resourceId) {
+        // 1. 直接复用 Repository 查库
+        ResourceItemEntity entity = resourceItemRepository.findById(resourceId)
+                .orElseThrow(() -> new ServiceException(ResPermissionErrorCode.RESOURCE_NOT_FOUND));
+
+        // 2. 组装最纯净的响应数据（不过滤任何东西）
+        ResourceItemResponse resp = new ResourceItemResponse();
+        resp.setResourceName(entity.getResourceName());
+        resp.setResourceType(entity.getResourceType());
+        resp.setOwnerId(entity.getOwnerId());
+
+        // 3. 提取所有标签（无视用户是否在组内，全量提取给 ES 建索引）
+        Map<String, String> tagMap = new HashMap<>();
+        if (entity.getGroupBinds() != null) {
+            List<String> allTagIds = entity.getGroupBinds().stream()
+                    .map(GroupTagBind::getTagIds)
+                    .filter(Objects::nonNull)
+                    .flatMap(List::stream)
+                    .distinct()
+                    .collect(Collectors.toList());
+            if (!allTagIds.isEmpty()) {
+                Iterable<TagEntity> tagEntities = tagRepository.findAllById(allTagIds);
+                for (TagEntity tag : tagEntities) {
+                    tagMap.put(tag.getTagId(), tag.getTagName());
+                }
+            }
+        }
+        resp.setCurrentTags(tagMap);
+
+        // 4. 提取所有被授权用户的权限（无视请求者身份，强行提取给 ES 建立可见性 ACL）
+        if (entity.getSpecifiedUsersGrantedActionsMask() != null) {
+            Map<String, List<ResourceAction>> userActionsMap = new HashMap<>();
+            entity.getSpecifiedUsersGrantedActionsMask().forEach((uid, mask) ->
+                    userActionsMap.put(uid, ResourceAction.permissionCodeToActions(mask)));
+            resp.setSpecifiedUsersGrantedActions(userActionsMap);
+        }
+
+        return resp;
+    }
 }

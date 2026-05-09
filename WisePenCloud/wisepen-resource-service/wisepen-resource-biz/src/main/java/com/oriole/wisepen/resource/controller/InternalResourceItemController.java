@@ -56,4 +56,10 @@ public class InternalResourceItemController implements RemoteResourceService {
         return R.ok();
     }
 
+    @GetMapping("/getRawInfo/{resourceId}")
+    public R<ResourceItemResponse> getRawResourceInfo(@PathVariable("resourceId") String resourceId) {
+        // Controller 薄如蝉翼，直接转交 Service
+        ResourceItemResponse response = resourceService.getSystemRawResourceInfo(resourceId);
+        return R.ok(response);
+    }
 }

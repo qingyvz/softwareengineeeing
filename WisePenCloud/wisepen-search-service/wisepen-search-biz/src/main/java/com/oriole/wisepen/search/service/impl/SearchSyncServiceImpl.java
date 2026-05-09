@@ -190,9 +190,8 @@ public class SearchSyncServiceImpl implements ISearchSyncService {
             while (true) {
                 // 1. 去 Document 服务拉正文
                 R<PageResult<DocumentContentDTO>> pageR = remoteDocumentService.getDocumentContentPage(page, size);
-
-                if (pageR == null || pageR.getCode() == null || pageR.getCode() != ResultCode.SUCCESS.getCode() || pageR.getData() == null) {
-                    log.error("拉取 Document 文本失败, 中断跑批!");
+                if (pageR == null || pageR.getCode() == null || !pageR.getCode().equals(ResultCode.SUCCESS.getCode()) || pageR.getData() == null) {
+                    log.error("拉取 Document 文本失败, 中断跑批! 详细响应: {}", pageR);
                     break;
                 }
 
@@ -206,14 +205,14 @@ public class SearchSyncServiceImpl implements ISearchSyncService {
                 // 2. 遍历文本，去 Resource 服务拉取 ACL 权限与元数据
                 for (DocumentContentDTO doc : documentList) {
                     try {
-                        ResourceInfoGetReqDTO reqDTO = new ResourceInfoGetReqDTO();
-                        reqDTO.setResourceId(doc.getResourceId());
-                        reqDTO.setUserId(SYSTEM_USER_ID);
-                        reqDTO.setGroupRoles(Collections.emptyMap());
+//                        ResourceInfoGetReqDTO reqDTO = new ResourceInfoGetReqDTO();
+//                        reqDTO.setResourceId(doc.getResourceId());
+//                        reqDTO.setUserId(SYSTEM_USER_ID);
+//                        reqDTO.setGroupRoles(Collections.emptyMap());
 
-                        R<ResourceItemResponse> resR = remoteResourceService.getResourceInfo(reqDTO);
+                        R<ResourceItemResponse> resR = remoteResourceService.getRawResourceInfo(doc.getResourceId());
 
-                        if (resR != null && resR.getCode() != null && resR.getCode() == ResultCode.SUCCESS.getCode() && resR.getData() != null) {
+                        if (resR != null && resR.getCode() != null && resR.getCode().equals(ResultCode.SUCCESS.getCode()) && resR.getData() != null) {
                             ResourceItemResponse resInfo = resR.getData();
 
                             // 类型

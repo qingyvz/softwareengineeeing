@@ -29,7 +29,6 @@ public class WisepenWebAutoConfiguration implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/auth/login", "/auth/register",
                         "/external/**",
-                        "/search/ping",
                         "/v3/api-docs/**",     // 放行 OpenAPI 的 JSON 接口
                         "/swagger-ui/**",      // 放行 Swagger 的 UI 静态资源
                         "/swagger-ui.html"     // 放行 Swagger 的 UI 入口

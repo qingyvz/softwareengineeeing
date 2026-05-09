@@ -29,12 +29,12 @@ public class SearchController {
      * 执行全局聚合搜索
      */
     @PostMapping("/global")
-    @Log(
-            title = "搜索业务资源",
-            businessType = BusinessType.SELECT, // 指向 common.core.domain.enums.BusinessType
-            isSaveRequestData = false,  // 关键字可能包含长串无意义字符，防爆库
-            isSaveResponseData = false  // 响应结果包含大量高亮标签和列表，严禁存入DB日志
-    )
+//    @Log(
+//            title = "搜索业务资源",
+//            businessType = BusinessType.SELECT, // 指向 common.core.domain.enums.BusinessType
+//            isSaveRequestData = false,  // 关键字可能包含长串无意义字符，防爆库
+//            isSaveResponseData = false  // 响应结果包含大量高亮标签和列表，严禁存入DB日志
+//    )
     public R<SearchResultResDTO> globalSearch(@Validated @RequestBody SearchQueryReqDTO reqDTO) {
 
         // 💡 架构重构：Controller 变薄！

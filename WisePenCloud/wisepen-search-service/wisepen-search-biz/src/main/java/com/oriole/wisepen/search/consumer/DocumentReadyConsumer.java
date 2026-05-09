@@ -44,63 +44,77 @@ public class DocumentReadyConsumer {
             SecurityContextHolder.setIdentityType(IdentityType.ADMIN.getCode());
 
             // 1. 解析原始 MQ 契约
-            DocumentReadyMessage message = objectMapper.readValue(messageValue, DocumentReadyMessage.class);
+            DocumentReadyMessage message;
+            try {
+                message = objectMapper.readValue(messageValue, DocumentReadyMessage.class);
+            } catch (Exception e) {
+                log.error("【格式错误】Kafka 消息 JSON 解析失败，跳过该消息！Offset: {}", record.offset());
+                return;
+            }
+
             String resourceId = message.getResourceId();
             String rawContent = message.getContent();
 
-            log.info("【搜索服务】接收到文档就绪事件, resourceId: {}, content_length: {}", resourceId, StrUtil.length(rawContent));
+            log.info("【搜索服务】开始处理文档就绪事件, resourceId: {}, content_length: {}", resourceId, StrUtil.length(rawContent));
             if (StrUtil.isBlank(resourceId)) return;
 
-            // 2. 组装合法的 RPC 请求参数 (完美满足 @NotNull 校验)
-            ResourceInfoGetReqDTO reqDTO = new ResourceInfoGetReqDTO();
-            reqDTO.setResourceId(resourceId);
-            reqDTO.setUserId(SYSTEM_USER_ID);
-            reqDTO.setGroupRoles(Collections.emptyMap()); // 必须设置，否则触发 400 校验异常
-
-            // 3. 发起 Feign 调用
-            R<ResourceItemResponse> responseR = remoteResourceService.getResourceInfo(reqDTO);
-
-            if (responseR == null || responseR.getCode() == null || responseR.getCode() != ResultCode.SUCCESS.getCode() || responseR.getData() == null) {
-                log.warn("无法从 Resource 服务拉取权限详情, 丢弃该消息. resourceId: {}, response: {}", resourceId, responseR);
-                return;
-            }
-            ResourceItemResponse resourceInfo = responseR.getData();
-
-            // 4. 数据结构转换与 ACL 权限聚合
-            String actualResourceType = resourceInfo.getResourceType() != null
-                    ? resourceInfo.getResourceType().name()
-                    : ResourceType.UNKNOWN.name();
-
+            // 2. 预初始化：直接利用 DTO 数据填充基础信息（降级方案）
+            // 哪怕 Feign 调用失败，我们至少能把正文存进去
+            String actualResourceType = ResourceType.UNKNOWN.name();
+            String resourceName = "未命名文档 (" + resourceId + ")";
             List<String> tagsList = new ArrayList<>();
-            if (resourceInfo.getCurrentTags() != null) {
-                tagsList.addAll(resourceInfo.getCurrentTags().values());
-            }
-
             Set<String> allowedUserSet = new HashSet<>();
-            if (StrUtil.isNotBlank(resourceInfo.getOwnerId())) {
-                allowedUserSet.add(resourceInfo.getOwnerId());
-            }
-            if (resourceInfo.getSpecifiedUsersGrantedActions() != null) {
-                allowedUserSet.addAll(resourceInfo.getSpecifiedUsersGrantedActions().keySet());
-            }
-
             List<String> allowedGroups = new ArrayList<>();
 
-            // 5. 构建全量聚合实体
+            // 3. 发起 Feign 调用进行“数据增强”
+            try {
+//                ResourceInfoGetReqDTO reqDTO = new ResourceInfoGetReqDTO();
+//                reqDTO.setResourceId(resourceId);
+//                reqDTO.setUserId(SYSTEM_USER_ID);
+//                reqDTO.setGroupRoles(Collections.emptyMap());
+
+
+                R<ResourceItemResponse> responseR = remoteResourceService.getRawResourceInfo(resourceId);
+
+                if (responseR != null && responseR.getCode() != null && responseR.getCode() == ResultCode.SUCCESS.getCode() && responseR.getData() != null) {
+                    ResourceItemResponse resourceInfo = responseR.getData();
+
+                    // 覆盖为来自 Resource 服务的权威数据
+                    actualResourceType = resourceInfo.getResourceType() != null ? resourceInfo.getResourceType().name() : actualResourceType;
+                    resourceName = resourceInfo.getResourceName();
+
+                    if (resourceInfo.getCurrentTags() != null) {
+                        tagsList.addAll(resourceInfo.getCurrentTags().values());
+                    }
+                    if (StrUtil.isNotBlank(resourceInfo.getOwnerId())) {
+                        allowedUserSet.add(resourceInfo.getOwnerId());
+                    }
+                    if (resourceInfo.getSpecifiedUsersGrantedActions() != null) {
+                        allowedUserSet.addAll(resourceInfo.getSpecifiedUsersGrantedActions().keySet());
+                    }
+                } else {
+                    log.warn("【数据降级】无法获取 Resource 详情，将使用 DTO 基础数据创建索引. resourceId: {}", resourceId);
+                }
+            } catch (Exception feignEx) {
+                log.error("【网络降级】Resource 服务调用异常，采用基础数据入库: {}", feignEx.getMessage());
+            }
+
+            // 4. 构建全量聚合实体
             String esId = SearchIndexEntity.generateEsId(actualResourceType, resourceId);
             SearchIndexEntity searchEntity = SearchIndexEntity.builder()
                     .id(esId)
                     .resourceId(resourceId)
                     .resourceType(actualResourceType)
-                    .title(resourceInfo.getResourceName())
-                    .content(rawContent)
+                    .title(resourceName)
+                    .content(rawContent) // 直接使用消息里发来的 content，不再回查
                     .allowedUsers(new ArrayList<>(allowedUserSet))
                     .allowedGroups(allowedGroups)
                     .tags(tagsList)
                     .build();
 
-            // 6. 执行全量 Upsert 落库 ES
+            // 5. 执行全量 Upsert 落库 ES
             searchSyncService.upsertFullIndex(searchEntity);
+            log.info("【搜索服务】成功初始化 ES 索引: {}", esId);
 
         } catch (Exception e) {
             log.error("【致命错误】消费文档就绪事件失败！", e);
