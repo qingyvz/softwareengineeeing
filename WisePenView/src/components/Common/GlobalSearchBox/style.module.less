@@ -1,0 +1,94 @@
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+}
+
+.searchInput {
+  width: 240px;
+  /* 增加优雅的宽度展开动画 */
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:focus-within {
+    width: 300px;
+  }
+}
+
+.popoverContent {
+  width: 360px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 4px 0;
+
+  /* 飞书风定制化细滚动条 */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+}
+
+.resultItem {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f1f5f9;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #f8fafc;
+  }
+}
+
+.iconWrapper {
+  margin-right: 12px;
+  font-size: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.textContent {
+  flex: 1;
+  min-width: 0; // 必须加，防止 Flex 子元素文本过长撑破父容器
+}
+
+.itemTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* 捕捉并渲染后端 ES 返回的红色高亮标签 */
+  :global(.wp-highlight) {
+    color: #ef4444;
+    font-style: normal;
+  }
+}
+
+.itemDesc {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  /* 摘要里高亮同样飘红 */
+  :global(.wp-highlight) {
+    color: #ef4444;
+    font-style: normal;
+  }
+}

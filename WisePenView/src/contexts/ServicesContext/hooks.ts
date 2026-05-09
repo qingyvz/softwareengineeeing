@@ -16,6 +16,7 @@ import type { IWalletService } from '@/services/Wallet';
 
 import { ServicesContext } from './context';
 import type { ServicesContextValue } from './registry';
+import type { ISearchService } from '@/services/Search/index.type';
 
 /** 内部 hook，供各 useXxxService 复用；必须在 ServicesProvider 内使用 */
 function useServicesContext(): ServicesContextValue {
@@ -41,3 +42,4 @@ export const useTagService = (): ITagService => useServicesContext().tagService;
 export const useUserService = (): IUserService => useServicesContext().userService;
 /** 个人中心钱包、高级组 token 相关页注入 */
 export const useWalletService = (): IWalletService => useServicesContext().walletService;
+export const useSearchService = (): ISearchService => useServicesContext().searchService;
