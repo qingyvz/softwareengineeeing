@@ -375,7 +375,7 @@ public class ResourceServiceImpl implements IResourceService {
     public PageResult<ResourceItemResponse> listResources(String currentUserId,
                                                           String groupId, GroupRoleType userGroupRole,
                                                           List<String> tagIds, QueryLogicEnum tagQueryLogicMode,
-                                                          String resourceType, int page, int size,
+                                                          String resourceType, String keyword, int page, int size,
                                                           ResourceSortBy sortBy, SortDirectionEnum sortDir) {
 
         List<String> excludeTrashIds = null;
@@ -399,7 +399,7 @@ public class ResourceServiceImpl implements IResourceService {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sortDir.toSpringDirection(), sortBy.getDbField()));
 
         Page<ResourceItemEntity> entityPage = customResourceItemRepository.findAccessibleResources(
-                currentUserId, groupId, userGroupRole, tagIds, excludeTrashIds, tagQueryLogicMode, resourceType, pageable);
+                currentUserId, groupId, userGroupRole, tagIds, excludeTrashIds, tagQueryLogicMode, resourceType, keyword, pageable);
 
         // 批量获取当前页用到的所有 Tag 名称
         Set<String> allTagIdsToFetch = new HashSet<>();

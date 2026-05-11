@@ -29,7 +29,7 @@ public interface IResourceService {
     PageResult<ResourceItemResponse> listResources(String currentUserId,
                                                    String groupId, GroupRoleType userGroupRole,
                                                    List<String> tagIds, QueryLogicEnum tagQueryLogicMode,
-                                                   String resourceType, int page, int size,
+                                                   String resourceType, String keyword, int page, int size,
                                                    ResourceSortBy sortBy, SortDirectionEnum sortDir);
 
     void softRemoveResources(List<String> resourceIds);

@@ -107,6 +107,8 @@ public class ResourceItemController {
             @Parameter(description = "多标签组合查询时的逻辑关系(AND/OR)")
             @RequestParam(value = "tagQueryLogicMode", defaultValue = "OR") QueryLogicEnum tagQueryLogicMode,
             @RequestParam(value = "resourceType", required = false) String resourceType,
+            @Parameter(description = "搜索关键词")
+            @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @Parameter(description = "排序字段枚举")
@@ -128,6 +130,7 @@ public class ResourceItemController {
                 tagIds,
                 tagQueryLogicMode,
                 resourceType,
+                keyword,
                 page,
                 size,
                 sortBy,

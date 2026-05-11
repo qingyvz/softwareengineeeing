@@ -29,3 +29,6 @@ spring:
         - 10 #指定首选的网络号段 (校园网段10开头)
   profiles:
     active: dev # 激活开发环境配置
+
+# Elasticsearch / Kafka 推荐改放在 Nacos 共享配置 wisepen-common-dev.yaml 内统一管理
+# 本地需要快速联调时再在 application-dev.yml / application-local.yml 覆盖
