@@ -12,7 +12,6 @@ import type { IStickerService } from '@/services/Sticker';
 import type { ITagService } from '@/services/Tag';
 import type { IUserService } from '@/services/User';
 import type { IWalletService } from '@/services/Wallet';
-import type { ISearchService } from '@/services/Search';
 
 export interface ServicesContextValue {
   authService: IAuthService;
@@ -24,7 +23,6 @@ export interface ServicesContextValue {
   noteService: INoteService;
   quotaService: IQuotaService;
   resourceService: IResourceService;
-  searchService: ISearchService;
   stickerService: IStickerService;
   tagService: ITagService;
   userService: IUserService;

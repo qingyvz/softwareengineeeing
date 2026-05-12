@@ -4,6 +4,8 @@ import type {
   IResourceService,
   RenameResourceRequest,
   ResourceListPage,
+  SearchQueryReqDTO,
+  SearchResultPage,
 } from '../../services/Resource';
 import type { ResourceItem } from '../../types/resource';
 import { useRecentFilesStore } from '../../store';
@@ -82,10 +84,37 @@ const updateResourceTags = async (): Promise<void> => {
   await delay(150);
 };
 
+/** 简易 Mock：用现有 resourceList 模糊匹配 resourceName，不模拟高亮、scope 与权限 */
+const globalSearch = async (params: SearchQueryReqDTO): Promise<SearchResultPage> => {
+  await delay(150);
+  const kw = params.keyword.trim().toLowerCase();
+  const matched = kw
+    ? fullMockResourceList.filter((r) => (r.resourceName ?? '').toLowerCase().includes(kw))
+    : [];
+  const total = matched.length;
+  const size = params.size;
+  const page = params.page;
+  const start = (page - 1) * size;
+  return {
+    list: matched.slice(start, start + size).map((r) => ({
+      resourceId: r.resourceId,
+      resourceType: (r.resourceType ?? 'unknown').toLowerCase(),
+      resourceName: r.resourceName ?? '',
+      highlightContent: null,
+      updateTime: new Date().toISOString(),
+    })),
+    total,
+    page,
+    size,
+    totalPage: Math.max(1, Math.ceil(total / size)),
+  };
+};
+
 export const ResourceServicesMock: IResourceService = {
   getUserResources,
   getGroupResources,
   renameResource,
   updateResourcePath,
   updateResourceTags,
+  globalSearch,
 };

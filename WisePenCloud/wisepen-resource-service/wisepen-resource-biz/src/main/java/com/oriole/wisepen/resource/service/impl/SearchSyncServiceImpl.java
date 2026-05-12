@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.oriole.wisepen.resource.domain.entity.SearchIndexEntity;
 import com.oriole.wisepen.resource.repository.SearchIndexRepository;
 import com.oriole.wisepen.resource.service.ISearchSyncService;
+import com.oriole.wisepen.resource.enums.UpsertField;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;

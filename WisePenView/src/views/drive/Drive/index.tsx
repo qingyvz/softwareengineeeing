@@ -11,7 +11,7 @@ import { useDrivePreferencesStore, type DriveViewMode } from '@/store';
 
 import { UploadDocumentModal } from './UploadDocumentModal';
 import styles from './style.module.less';
-import GlobalSearchBox from '@/components/Common/GlobalSearchBox';
+import GlobalSearchBox from '@/components/GlobalSearchBox';
 const VIEW_TABS: { key: DriveViewMode; label: string }[] = [
   { key: 'folder', label: '文件夹管理' },
   { key: 'flat', label: '标签管理' },
@@ -39,7 +39,7 @@ const Drive: React.FC = () => {
         <div className={styles.actionsRow}>
 
           <GlobalSearchBox />
-          
+
           <Button
             type="default"
             icon={<LuTags size={16} />}

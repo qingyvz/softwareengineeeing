@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "全文搜索", description = "面向前端的全文搜索接口")
 @RestController
-@RequestMapping("/search")
+@RequestMapping("/resource/search")
 @RequiredArgsConstructor
 @CheckLogin
 public class SearchController {

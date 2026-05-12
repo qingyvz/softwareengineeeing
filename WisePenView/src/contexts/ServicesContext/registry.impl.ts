@@ -23,7 +23,6 @@ import { createStickerServices } from '@/services/Sticker/StickerServices.impl';
 import { createTagServices } from '@/services/Tag/TagServices.impl';
 import { createUserServices } from '@/services/User/UserServices.impl';
 import { createWalletServices } from '@/services/Wallet/WalletServices.impl';
-import { createSearchServices } from '@/services/Search/SearchServices.impl';
 
 import type { ServicesContextValue } from './registry.types';
 
@@ -36,7 +35,6 @@ const imageService = createImageServices();
 const noteService = createNoteServices();
 const quotaService = createQuotaServices();
 const resourceService = createResourceServices();
-const searchService = createSearchServices();
 const userService = createUserServices();
 const walletService = createWalletServices();
 
@@ -55,7 +53,6 @@ const servicesValue: ServicesContextValue = {
   noteService: noteService,
   quotaService: quotaService,
   resourceService: resourceService,
-   searchService: searchService,
   stickerService: stickerService,
   tagService: tagService,
   userService: userService,

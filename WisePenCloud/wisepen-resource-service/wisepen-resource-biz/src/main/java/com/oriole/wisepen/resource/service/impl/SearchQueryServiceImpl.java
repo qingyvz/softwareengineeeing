@@ -88,7 +88,7 @@ public class SearchQueryServiceImpl implements ISearchQueryService {
 
         boolBuilder.filter(f -> f.bool(b -> buildAclShould(b, userIdStr, memberGroupIds, adminOwnerGroupIds)));
 
-        // SearchScope 三分支过滤：ALL 不加类型过滤；DOCUMENT / NOTE 一次 terms 命中对应集合
+        // SearchScope 三分支过滤：ALL 不加类型过滤；DOCUMENT / NOTE 一次 terms 命中对应集合，讲白了分区搜索快一些
         if (scope != SearchScope.ALL) {
             List<FieldValue> typeValues = scope.includedResourceTypes().stream()
                     .map(ResourceType::getExtension)

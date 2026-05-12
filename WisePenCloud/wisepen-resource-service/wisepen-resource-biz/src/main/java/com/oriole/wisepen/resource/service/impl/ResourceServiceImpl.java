@@ -179,7 +179,8 @@ public class ResourceServiceImpl implements IResourceService {
 
             if (groupId.startsWith(ResourceConstants.PERSONAL_GROUP_PREFIX)) {
                 // 校验个人空间：必须有且仅有 1 个 isPath = true 的节点
-                List<TagEntity> pathTags =  validTags.stream().filter(tag -> Boolean.TRUE.equals(tag.getIsPath())).toList();
+                List<TagEntity> pathTags = validTags.stream().filter(tag -> Boolean.TRUE.equals(tag.getIsPath()))
+                        .toList();
                 if (pathTags.size() != 1) {
                     throw new ServiceException(ResPermissionErrorCode.PERSONAL_SPACE_MUST_HAVE_ONE_PATH);
                 }
@@ -189,7 +190,8 @@ public class ResourceServiceImpl implements IResourceService {
                 }
 
                 // 检查目标路径是否属于回收站
-                if (tagService.isNodeInTrash(groupId, pathTags.getFirst().getTagId()) != ITagService.TagType.NOT_IN_TRASH) {
+                if (tagService.isNodeInTrash(groupId,
+                        pathTags.getFirst().getTagId()) != ITagService.TagType.NOT_IN_TRASH) {
                     isTrashed = true;
                     groupBinds.removeIf(bind -> !bind.getGroupId().startsWith(ResourceConstants.PERSONAL_GROUP_PREFIX));
                     entity.setOverrideGrantedActionsMask(null);
@@ -234,21 +236,22 @@ public class ResourceServiceImpl implements IResourceService {
     }
 
     @Override
-    public void updateResourceActionPermission(ResourceUpdateActionPermissionRequest req){
+    public void updateResourceActionPermission(ResourceUpdateActionPermissionRequest req) {
         ResourceItemEntity entity = resourceItemRepository.findById(req.getResourceId())
                 .orElseThrow(() -> new ServiceException(ResPermissionErrorCode.RESOURCE_NOT_FOUND));
 
         // 前端传 null 代表清空覆盖规则，走默认群组标签规则 (下同)
         if (req.getOverrideGrantedActions() != null) {
-            entity.setOverrideGrantedActionsMask(ResourceAction.actionsToPermissionCode(req.getOverrideGrantedActions()));
+            entity.setOverrideGrantedActionsMask(
+                    ResourceAction.actionsToPermissionCode(req.getOverrideGrantedActions()));
         } else {
             entity.setOverrideGrantedActionsMask(null);
         }
 
         if (req.getSpecifiedUsersGrantedActions() != null) {
             Map<String, Integer> specifiedMaskMap = new HashMap<>();
-            req.getSpecifiedUsersGrantedActions().forEach((uid, actionsList) ->
-                    specifiedMaskMap.put(uid, ResourceAction.actionsToPermissionCode(actionsList)));
+            req.getSpecifiedUsersGrantedActions().forEach((uid, actionsList) -> specifiedMaskMap.put(uid,
+                    ResourceAction.actionsToPermissionCode(actionsList)));
             entity.setSpecifiedUsersGrantedActionsMask(specifiedMaskMap);
         } else {
             entity.setSpecifiedUsersGrantedActionsMask(null);
@@ -258,7 +261,8 @@ public class ResourceServiceImpl implements IResourceService {
         log.info("resourceActionPermission changed resourceId={} hasOverride={} specifiedUserCount={}",
                 entity.getResourceId(),
                 entity.getOverrideGrantedActionsMask() != null,
-                entity.getSpecifiedUsersGrantedActionsMask() == null ? 0 : entity.getSpecifiedUsersGrantedActionsMask().size());
+                entity.getSpecifiedUsersGrantedActionsMask() == null ? 0
+                        : entity.getSpecifiedUsersGrantedActionsMask().size());
 
         // 保存资源级权限覆盖后，触发重算
         eventPublisher.publishAclRecalculateEvent(entity.getResourceId(), "RESOURCE_ACTION_PERMISSION_CHANGED");
@@ -277,13 +281,17 @@ public class ResourceServiceImpl implements IResourceService {
             currentActionsMask = ResourceAction.ALL_ACTIONS;
         } else {
             // 检查资源级的“指定用户特权”
-            Integer userSpecifiedMask = entity.getSpecifiedUsersGrantedActionsMask() == null ? null : entity.getSpecifiedUsersGrantedActionsMask().get(currentUserIdStr);
-            if (userSpecifiedMask != null) currentActionsMask = userSpecifiedMask;
+            Integer userSpecifiedMask = entity.getSpecifiedUsersGrantedActionsMask() == null ? null
+                    : entity.getSpecifiedUsersGrantedActionsMask().get(currentUserIdStr);
+            if (userSpecifiedMask != null)
+                currentActionsMask = userSpecifiedMask;
             // 如果没有指定用户特权，则遍历预计算的群组 ACL
-            else if (dto.getGroupRoles() != null && !dto.getGroupRoles().isEmpty() && entity.getComputedGroupAcls() != null) {
+            else if (dto.getGroupRoles() != null && !dto.getGroupRoles().isEmpty()
+                    && entity.getComputedGroupAcls() != null) {
                 for (Map.Entry<String, ComputedGroupAcl> entry : entity.getComputedGroupAcls().entrySet()) {
                     Long groupId = Long.valueOf(entry.getKey());
-                    if (!dto.getGroupRoles().containsKey(groupId)) continue;
+                    if (!dto.getGroupRoles().containsKey(groupId))
+                        continue;
 
                     GroupRoleType userRole = dto.getGroupRoles().get(groupId);
                     // 如果是小组管理员或所有者，拥有该小组维度的全权限
@@ -338,12 +346,12 @@ public class ResourceServiceImpl implements IResourceService {
         List<String> allTagIds = entity.getGroupBinds() == null
                 ? Collections.emptyList()
                 : entity.getGroupBinds().stream()
-                    .filter(bind -> accessibleGroupIds.contains(bind.getGroupId()))
-                    .map(GroupTagBind::getTagIds)
-                    .filter(Objects::nonNull)
-                    .flatMap(List::stream)
-                    .distinct()
-                    .collect(Collectors.toList());
+                        .filter(bind -> accessibleGroupIds.contains(bind.getGroupId()))
+                        .map(GroupTagBind::getTagIds)
+                        .filter(Objects::nonNull)
+                        .flatMap(List::stream)
+                        .distinct()
+                        .collect(Collectors.toList());
 
         Map<String, String> tagMap = new HashMap<>();
         if (!allTagIds.isEmpty()) {
@@ -358,13 +366,14 @@ public class ResourceServiceImpl implements IResourceService {
         if (dto.getUserId().toString().equals(entity.getOwnerId())) {
             // 处理权限掩码解包
             if (entity.getOverrideGrantedActionsMask() != null) {
-                resp.setOverrideGrantedActions(ResourceAction.permissionCodeToActions(entity.getOverrideGrantedActionsMask()));
+                resp.setOverrideGrantedActions(
+                        ResourceAction.permissionCodeToActions(entity.getOverrideGrantedActionsMask()));
             }
 
             if (entity.getSpecifiedUsersGrantedActionsMask() != null) {
                 Map<String, List<ResourceAction>> userActionsMap = new HashMap<>();
-                entity.getSpecifiedUsersGrantedActionsMask().forEach((uid, mask) ->
-                        userActionsMap.put(uid, ResourceAction.permissionCodeToActions(mask)));
+                entity.getSpecifiedUsersGrantedActionsMask()
+                        .forEach((uid, mask) -> userActionsMap.put(uid, ResourceAction.permissionCodeToActions(mask)));
                 resp.setSpecifiedUsersGrantedActions(userActionsMap);
             }
         }
@@ -373,10 +382,10 @@ public class ResourceServiceImpl implements IResourceService {
 
     @Override
     public PageResult<ResourceItemResponse> listResources(String currentUserId,
-                                                          String groupId, GroupRoleType userGroupRole,
-                                                          List<String> tagIds, QueryLogicEnum tagQueryLogicMode,
-                                                          String resourceType, String keyword, int page, int size,
-                                                          ResourceSortBy sortBy, SortDirectionEnum sortDir) {
+            String groupId, GroupRoleType userGroupRole,
+            List<String> tagIds, QueryLogicEnum tagQueryLogicMode,
+            String resourceType, String keyword, int page, int size,
+            ResourceSortBy sortBy, SortDirectionEnum sortDir) {
 
         List<String> excludeTrashIds = null;
         // 如果是个人空间，且没有明确指定要查回收站，必须把回收站设为黑名单
@@ -389,7 +398,8 @@ public class ResourceServiceImpl implements IResourceService {
                 // 如果前端传了 tagIds，说明用户是在明确浏览某个特定文件夹（哪怕它已经在回收站里），此时不应拦截。
                 if (tagIds == null || tagIds.isEmpty()) {
                     // 查出回收站体系下的所有子孙文件夹
-                    List<TagEntity> descendants = tagRepository.findByGroupIdAndAncestorsContaining(groupId, trashNode.getTagId());
+                    List<TagEntity> descendants = tagRepository.findByGroupIdAndAncestorsContaining(groupId,
+                            trashNode.getTagId());
                     excludeTrashIds = descendants.stream().map(TagEntity::getTagId).collect(Collectors.toList());
                     excludeTrashIds.add(trashNode.getTagId());
                 }
@@ -399,7 +409,8 @@ public class ResourceServiceImpl implements IResourceService {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sortDir.toSpringDirection(), sortBy.getDbField()));
 
         Page<ResourceItemEntity> entityPage = customResourceItemRepository.findAccessibleResources(
-                currentUserId, groupId, userGroupRole, tagIds, excludeTrashIds, tagQueryLogicMode, resourceType, keyword, pageable);
+                currentUserId, groupId, userGroupRole, tagIds, excludeTrashIds, tagQueryLogicMode, resourceType,
+                pageable);
 
         // 批量获取当前页用到的所有 Tag 名称
         Set<String> allTagIdsToFetch = new HashSet<>();
@@ -409,10 +420,10 @@ public class ResourceServiceImpl implements IResourceService {
             List<String> extractedTagIds = (entity.getGroupBinds() == null)
                     ? Collections.emptyList()
                     : entity.getGroupBinds().stream()
-                        .filter(bind -> bind.getGroupId().equals(groupId))
-                        .findFirst()
-                        .map(GroupTagBind::getTagIds)
-                        .orElse(Collections.emptyList());
+                            .filter(bind -> bind.getGroupId().equals(groupId))
+                            .findFirst()
+                            .map(GroupTagBind::getTagIds)
+                            .orElse(Collections.emptyList());
             resourceTagIdsMap.put(entity.getResourceId(), extractedTagIds);
             allTagIdsToFetch.addAll(extractedTagIds);
         }
@@ -448,19 +459,18 @@ public class ResourceServiceImpl implements IResourceService {
         return pageResult;
     }
 
-
     @Override
     public String createResourceItem(ResourceCreateReqDTO dto) {
         ResourceItemEntity entity = new ResourceItemEntity();
         BeanUtil.copyProperties(dto, entity);
         resourceItemRepository.save(entity);
         try {
-            String pathTagID = !StringUtils.hasText(dto.getPathTagId()) ?
-                    tagRepository.findByGroupIdAndParentIdAndTagName(
-                                ResourceConstants.PERSONAL_GROUP_PREFIX + dto.getOwnerId(), "0", ResourceConstants.ROOT_TAG_NAME)
-                        .orElseThrow(() -> new ServiceException(ResPermissionErrorCode.TAG_NOT_FOUND)).getTagId()
-                    :
-                    dto.getPathTagId();
+            String pathTagID = !StringUtils.hasText(dto.getPathTagId())
+                    ? tagRepository.findByGroupIdAndParentIdAndTagName(
+                            ResourceConstants.PERSONAL_GROUP_PREFIX + dto.getOwnerId(), "0",
+                            ResourceConstants.ROOT_TAG_NAME)
+                            .orElseThrow(() -> new ServiceException(ResPermissionErrorCode.TAG_NOT_FOUND)).getTagId()
+                    : dto.getPathTagId();
             List<String> targetTagIds = Collections.singletonList(pathTagID);
 
             ResourceUpdateTagsRequest bindReq = new ResourceUpdateTagsRequest();
@@ -508,9 +518,9 @@ public class ResourceServiceImpl implements IResourceService {
         List<ResourceItemEntity> expiredResources = mongoTemplate.find(
                 query,
                 ResourceItemEntity.class,
-                ResourceConstants.RESOURCE_TRASH_COLLECTION
-        );
-        if (expiredResources.isEmpty()) return;
+                ResourceConstants.RESOURCE_TRASH_COLLECTION);
+        if (expiredResources.isEmpty())
+            return;
 
         long deletedCount = mongoTemplate.remove(query, RESOURCE_TRASH_COLLECTION).getDeletedCount();
         if (deletedCount > 0) {
@@ -552,7 +562,8 @@ public class ResourceServiceImpl implements IResourceService {
 
     @Override
     public void afterTagNodeDeleted(List<String> deletedTagIds, Boolean isPersonalTag, Boolean isPathTag) {
-        if (deletedTagIds == null || deletedTagIds.isEmpty()) return;
+        if (deletedTagIds == null || deletedTagIds.isEmpty())
+            return;
 
         // 查询所有涉及的资源绑定记录
         List<ResourceItemEntity> affectedBinds = resourceItemRepository.findByTagIdsIn(deletedTagIds);
@@ -600,21 +611,24 @@ public class ResourceServiceImpl implements IResourceService {
                 eventPublisher.publishAclRecalculateEvent(entity.getResourceId(), "TAG_DELETED");
                 recalcResourceIds.add(entity.getResourceId());
             }
-            log.info("aclRecalc dispatched mode=batch tagCount={} tagIds={} affectedResources={} affectedResourceIds={}",
+            log.info(
+                    "aclRecalc dispatched mode=batch tagCount={} tagIds={} affectedResources={} affectedResourceIds={}",
                     deletedTagIds.size(), summarizeIds(deletedTagIds),
                     recalcResourceIds.size(), summarizeIds(recalcResourceIds));
         }
     }
 
-    public void stripGroupPermission(List<String> trashedTagIds){
-        if (trashedTagIds == null || trashedTagIds.isEmpty()) return;
+    public void stripGroupPermission(List<String> trashedTagIds) {
+        if (trashedTagIds == null || trashedTagIds.isEmpty())
+            return;
 
         Query query = new Query(Criteria.where("groupBinds.tagIds").in(trashedTagIds));
         List<ResourceItemEntity> affectedResources = mongoTemplate.find(query, ResourceItemEntity.class);
 
         if (!affectedResources.isEmpty()) {
             for (ResourceItemEntity entity : affectedResources) {
-                entity.getGroupBinds().removeIf(bind -> !bind.getGroupId().startsWith(ResourceConstants.PERSONAL_GROUP_PREFIX));
+                entity.getGroupBinds()
+                        .removeIf(bind -> !bind.getGroupId().startsWith(ResourceConstants.PERSONAL_GROUP_PREFIX));
                 entity.setOverrideGrantedActionsMask(null);
                 entity.setSpecifiedUsersGrantedActionsMask(null);
                 entity.setComputedGroupAcls(null);
@@ -647,13 +661,16 @@ public class ResourceServiceImpl implements IResourceService {
 
         if (bindEntity.getGroupBinds() != null && !bindEntity.getGroupBinds().isEmpty()) {
             for (GroupTagBind groupBind : bindEntity.getGroupBinds()) {
-                if (groupBind.getTagIds() == null || groupBind.getTagIds().isEmpty()) continue;
-                if (groupBind.getGroupId().startsWith(ResourceConstants.PERSONAL_GROUP_PREFIX)) continue; // 个人Tag不参与计算Acl
+                if (groupBind.getTagIds() == null || groupBind.getTagIds().isEmpty())
+                    continue;
+                if (groupBind.getGroupId().startsWith(ResourceConstants.PERSONAL_GROUP_PREFIX))
+                    continue; // 个人Tag不参与计算Acl
 
                 // 提取首标并查询
                 String primaryTagId = groupBind.getTagIds().getFirst();
                 TagEntity primaryTag = tagRepository.findById(primaryTagId).orElse(null);
-                if (primaryTag == null) continue;
+                if (primaryTag == null)
+                    continue;
 
                 Integer defaultActions = groupResConfigRepository.findByGroupId(groupBind.getGroupId())
                         .map(GroupResConfigEntity::getDefaultMemberActionsMask)
@@ -709,8 +726,8 @@ public class ResourceServiceImpl implements IResourceService {
                     ResourceAction.permissionCodeToActions(ResourceAction.ALL_ACTIONS)));
         }
         // 提前提取用户定向特权掩码
-        Integer userMask = entity.getSpecifiedUsersGrantedActionsMask() == null ? null :
-                entity.getSpecifiedUsersGrantedActionsMask().get(dto.getUserId().toString());
+        Integer userMask = entity.getSpecifiedUsersGrantedActionsMask() == null ? null
+                : entity.getSpecifiedUsersGrantedActionsMask().get(dto.getUserId().toString());
         // 判断是否缺乏群组上下文（用户不在任何组 或 资源不在任何组）
         boolean noGroupContext = (dto.getGroupRoles() == null || dto.getGroupRoles().isEmpty()) ||
                 (entity.getGroupBinds() == null || entity.getGroupBinds().isEmpty());
@@ -726,13 +743,14 @@ public class ResourceServiceImpl implements IResourceService {
         if (!noGroupContext) {
             // 遍历资源绑定的所有组
             for (GroupTagBind groupBind : entity.getGroupBinds()) {
-                if (groupBind.getGroupId().startsWith(ResourceConstants.PERSONAL_GROUP_PREFIX)) continue; // 个人Tag不参与计算
+                if (groupBind.getGroupId().startsWith(ResourceConstants.PERSONAL_GROUP_PREFIX))
+                    continue; // 个人Tag不参与计算
                 Long groupId = Long.valueOf(groupBind.getGroupId());
 
-                if (!dto.getGroupRoles() .containsKey(groupId)) { // 用户不在该组，跳过
+                if (!dto.getGroupRoles().containsKey(groupId)) { // 用户不在该组，跳过
                     continue;
                 }
-                GroupRoleType userRoleInThisGroup = dto.getGroupRoles() .get(groupId);
+                GroupRoleType userRoleInThisGroup = dto.getGroupRoles().get(groupId);
 
                 // 用户是组管理员/拥有者，有全部权限
                 if (userRoleInThisGroup == GroupRoleType.ADMIN || userRoleInThisGroup == GroupRoleType.OWNER) {
@@ -754,8 +772,11 @@ public class ResourceServiceImpl implements IResourceService {
 
                 // 使用 AclGrantMode 判断用户是否能获取当前组的权限掩码
                 boolean isEligibleForMask = (resolved.aclGrantMode == AclGrantMode.ALL ||
-                        (resolved.aclGrantMode == AclGrantMode.WHITELIST && resolved.specifiedUsers.contains(dto.getUserId().toString())) ||
-                        (resolved.aclGrantMode == AclGrantMode.BLACKLIST && !resolved.specifiedUsers.contains(dto.getUserId().toString())));
+                        (resolved.aclGrantMode == AclGrantMode.WHITELIST
+                                && resolved.specifiedUsers.contains(dto.getUserId().toString()))
+                        ||
+                        (resolved.aclGrantMode == AclGrantMode.BLACKLIST
+                                && !resolved.specifiedUsers.contains(dto.getUserId().toString())));
 
                 if (isEligibleForMask) {
                     // 只要有一个组能下发权限，基础身份就是 Member
@@ -772,7 +793,8 @@ public class ResourceServiceImpl implements IResourceService {
         // 应用资源级权限覆盖策略
         // 优先级：定向用户特权 (userMask) > 群组策略覆盖 (Override) > 群组策略 (actionsMask)
         if (resourceAccessRole != ResourceAccessRole.NONE) { // 组策略覆盖的前提是用户在某个组内
-            actionsMask = entity.getOverrideGrantedActionsMask() == null ? actionsMask : entity.getOverrideGrantedActionsMask();
+            actionsMask = entity.getOverrideGrantedActionsMask() == null ? actionsMask
+                    : entity.getOverrideGrantedActionsMask();
         }
         if (userMask != null) { // 如果有定向用户特权
             resourceAccessRole = ResourceAccessRole.OWNER_SPECIFIED;
@@ -780,13 +802,15 @@ public class ResourceServiceImpl implements IResourceService {
             permissionSources.clear();
         }
 
-        return logResolved(dto, new ResourceCheckPermissionResDTO(resourceAccessRole, permissionSources, ResourceAction.permissionCodeToActions(actionsMask)));
+        return logResolved(dto, new ResourceCheckPermissionResDTO(resourceAccessRole, permissionSources,
+                ResourceAction.permissionCodeToActions(actionsMask)));
     }
 
     /**
      * 鉴权出口统一打 DEBUG，便于排查权限问题
      */
-    private ResourceCheckPermissionResDTO logResolved(ResourceCheckPermissionReqDTO dto, ResourceCheckPermissionResDTO result) {
+    private ResourceCheckPermissionResDTO logResolved(ResourceCheckPermissionReqDTO dto,
+            ResourceCheckPermissionResDTO result) {
         log.debug("permission resolved resourceId={} userId={} role={} actions={}",
                 dto.getResourceId(), dto.getUserId(), result.getResourceAccessRole(), result.getAllowedActions());
         return result;
@@ -801,9 +825,17 @@ public class ResourceServiceImpl implements IResourceService {
         List<String> specifiedUsers = Collections.emptyList();
         Integer grantedActionsMask;
 
-        boolean isAclGrantModeResolved() { return aclGrantMode != null; }
-        boolean isActionsResolved() { return grantedActionsMask != null; }
-        boolean isFullyResolved() { return isAclGrantModeResolved() && isActionsResolved(); }
+        boolean isAclGrantModeResolved() {
+            return aclGrantMode != null;
+        }
+
+        boolean isActionsResolved() {
+            return grantedActionsMask != null;
+        }
+
+        boolean isFullyResolved() {
+            return isAclGrantModeResolved() && isActionsResolved();
+        }
     }
 
     /**
@@ -900,8 +932,8 @@ public class ResourceServiceImpl implements IResourceService {
         // 4. 提取所有被授权用户的权限（无视请求者身份，强行提取给 ES 建立可见性 ACL）
         if (entity.getSpecifiedUsersGrantedActionsMask() != null) {
             Map<String, List<ResourceAction>> userActionsMap = new HashMap<>();
-            entity.getSpecifiedUsersGrantedActionsMask().forEach((uid, mask) ->
-                    userActionsMap.put(uid, ResourceAction.permissionCodeToActions(mask)));
+            entity.getSpecifiedUsersGrantedActionsMask()
+                    .forEach((uid, mask) -> userActionsMap.put(uid, ResourceAction.permissionCodeToActions(mask)));
             resp.setSpecifiedUsersGrantedActions(userActionsMap);
         }
 

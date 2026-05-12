@@ -21,6 +21,43 @@ export interface IResourceService {
   renameResource(params: RenameResourceRequest): Promise<void>;
   updateResourcePath(params: UpdateResourcePathRequest): Promise<void>;
   updateResourceTags(params: UpdateResourceTagsRequest): Promise<void>;
+  globalSearch(params: SearchQueryReqDTO): Promise<SearchResultPage>;
+}
+
+/** 搜索范围：与后端 SearchScope 枚举字面值保持一致 */
+export const SEARCH_SCOPE = { ALL: 'ALL', DOCUMENT: 'DOCUMENT', NOTE: 'NOTE' } as const;
+export type SearchScope = (typeof SEARCH_SCOPE)[keyof typeof SEARCH_SCOPE];
+
+/** 全文搜索请求 DTO，对齐后端 POST /search/global 入参 */
+export interface SearchQueryReqDTO {
+  keyword: string;
+  scope?: SearchScope;
+  page: number;
+  size: number;
+}
+
+/**
+ * 单条搜索命中项；字段命名与后端 SearchHitItemResDTO 一致，便于零映射直读。
+ *
+ * - resourceType: 小写枚举字面值（pdf / docx / note / unknown ...）
+ * - resourceName / highlightContent: 可能携带 <em class="wp-highlight"> 包裹，
+ *   渲染端需经 dangerouslySetInnerHTML 才能让高亮生效
+ */
+export interface SearchHitItemResDTO {
+  resourceId: string;
+  resourceType: string;
+  resourceName: string;
+  highlightContent: string | null;
+  updateTime: string;
+}
+
+/** 搜索分页结果，结构与 PageResult<SearchHitItemResDTO> 序列化形态一致 */
+export interface SearchResultPage {
+  list: SearchHitItemResDTO[];
+  total: number;
+  page: number;
+  size: number;
+  totalPage: number;
 }
 
 /** 排序字段枚举 */

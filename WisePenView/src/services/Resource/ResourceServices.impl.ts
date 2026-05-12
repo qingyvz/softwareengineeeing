@@ -3,10 +3,12 @@ import type {
   GetGroupResourceRequest,
   GetUserResourcesRequest,
   RenameResourceRequest,
+  SearchQueryReqDTO,
+  SearchResultPage,
   UpdateResourcePathRequest,
   UpdateResourceTagsRequest,
 } from './index.type';
-import { TAG_QUERY_LOGIC_MODE } from './index.type';
+import { SEARCH_SCOPE, TAG_QUERY_LOGIC_MODE } from './index.type';
 import type { IResourceService } from './index.type';
 import Axios from '@/utils/Axios';
 import { serializeRepeatKeyQuery } from '@/utils/serializeRepeatKeyQuery';
@@ -73,10 +75,29 @@ const updateResourceTags = async (params: UpdateResourceTagsRequest): Promise<vo
   checkResponse(res);
 };
 
+const globalSearch = async (params: SearchQueryReqDTO): Promise<SearchResultPage> => {
+  const res = (await Axios.post('/resource/search/global', {
+    keyword: params.keyword,
+    scope: params.scope ?? SEARCH_SCOPE.ALL,
+    page: params.page,
+    size: params.size,
+  })) as ApiResponse<SearchResultPage>;
+  checkResponse(res);
+  const d = res.data;
+  return {
+    list: d?.list ?? [],
+    total: d?.total ?? 0,
+    page: d?.page ?? params.page,
+    size: d?.size ?? params.size,
+    totalPage: d?.totalPage ?? 0,
+  };
+};
+
 export const createResourceServices = (): IResourceService => ({
   getUserResources,
   getGroupResources,
   renameResource,
   updateResourcePath,
   updateResourceTags,
+  globalSearch,
 });
