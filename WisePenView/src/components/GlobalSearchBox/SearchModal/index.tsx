@@ -5,7 +5,7 @@ import { RiSearchLine } from 'react-icons/ri';
 import {
   SEARCH_SCOPE,
   type SearchScope,
-} from '@/services/Resource/index.type';
+} from '@/domains/Resource';
 import SearchResultList from '../SearchResultList';
 import type { SearchModalProps } from './index.type';
 import styles from './style.module.less';

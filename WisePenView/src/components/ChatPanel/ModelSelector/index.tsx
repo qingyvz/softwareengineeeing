@@ -1,22 +1,22 @@
-import React, { useState, useMemo } from 'react';
 import { useRequest, useUpdateEffect } from 'ahooks';
-import { Popover, Dropdown, Tag, Spin, Empty } from 'antd';
 import type { MenuProps } from 'antd';
+import { Dropdown, Empty, Popover, Spin, Tag } from 'antd';
+import clsx from 'clsx';
+import React, { useMemo, useState } from 'react';
 import {
+  RiAppsLine,
   RiArrowDownSLine,
   RiArrowUpSLine,
+  RiBarChartLine,
   RiCheckLine,
   RiSortAsc,
-  RiAppsLine,
-  RiBarChartLine,
 } from 'react-icons/ri';
-import clsx from 'clsx';
 
-import { OpenAI, Claude, Grok, DeepSeek, Doubao, Meta, Mistral, Gemini } from '@lobehub/icons';
+import { Claude, DeepSeek, Doubao, Gemini, Grok, Meta, Mistral, OpenAI } from '@lobehub/icons';
 
-import { useChatService } from '@/contexts/ServicesContext';
-import { mapApiModelsToFlatModels } from '@/services/Chat';
-import { useChatModelPreferenceStore } from '@/store/zustand/useChatModelPreferenceStore';
+import { useChatService } from '@/domains';
+import { mapApiModelsToFlatModels } from '@/domains/Chat';
+import { useChatModelPreferenceStore } from '@/store/useChatModelPreferenceStore';
 import type { Model } from '../index.type';
 
 import styles from './style.module.less';

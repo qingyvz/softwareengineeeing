@@ -1,6 +1,6 @@
 package com.oriole.wisepen.resource.service;
 
-import com.oriole.wisepen.resource.domain.entity.SearchIndexEntity;
+import com.oriole.wisepen.resource.domain.entity.ESIndexEntity;
 import com.oriole.wisepen.resource.enums.UpsertField;
 import java.util.EnumSet;
 
@@ -16,20 +16,20 @@ public interface ISearchSyncService {
     /**
      * 通用 Upsert：仅更新 fields 指定字段。resourceId / resourceType / updateTime 始终写入。
      */
-    void executeUpsert(SearchIndexEntity entity, EnumSet<UpsertField> fields);
+    void executeUpsert(ESIndexEntity entity, EnumSet<UpsertField> fields);
 
     /** 仅更新元数据与权限（不触碰 content） */
-    default void upsertIndexMetaData(SearchIndexEntity entity) {
+    default void upsertIndexMetaData(ESIndexEntity entity) {
         executeUpsert(entity, EnumSet.of(UpsertField.ACL, UpsertField.TAGS, UpsertField.RESOURCE_NAME));
     }
 
     /** 仅更新长文本正文与名称（不触碰 ACL/tags） */
-    default void upsertIndexContent(SearchIndexEntity entity) {
+    default void upsertIndexContent(ESIndexEntity entity) {
         executeUpsert(entity, EnumSet.of(UpsertField.RESOURCE_NAME, UpsertField.CONTENT));
     }
 
     /** 全量 Upsert：内容 + 权限 + 标签同时落盘，用于初始化索引 */
-    default void upsertFullIndex(SearchIndexEntity entity) {
+    default void upsertFullIndex(ESIndexEntity entity) {
         executeUpsert(entity, EnumSet.allOf(UpsertField.class));
     }
 

@@ -12,9 +12,9 @@ import com.oriole.wisepen.common.core.domain.PageResult;
 import com.oriole.wisepen.common.core.domain.enums.GroupRoleType;
 import com.oriole.wisepen.common.core.exception.ServiceException;
 import com.oriole.wisepen.resource.constant.SearchConstants;
-import com.oriole.wisepen.resource.domain.dto.req.SearchQueryReqDTO;
-import com.oriole.wisepen.resource.domain.dto.res.SearchHitItemResDTO;
-import com.oriole.wisepen.resource.domain.entity.SearchIndexEntity;
+import com.oriole.wisepen.resource.domain.dto.req.SearchQueryRequest;
+import com.oriole.wisepen.resource.domain.dto.res.SearchHitItemResponse;
+import com.oriole.wisepen.resource.domain.entity.ESIndexEntity;
 import com.oriole.wisepen.resource.enums.ResourceType;
 import com.oriole.wisepen.resource.enums.SearchScope;
 import com.oriole.wisepen.resource.exception.SearchErrorCode;
@@ -56,12 +56,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SearchQueryServiceImpl implements ISearchQueryService {
 
-    private static final String NESTED_PATH_GROUP_ACLS = "groupAcls";
+
 
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
-    public PageResult<SearchHitItemResDTO> globalSearch(SearchQueryReqDTO req) {
+    public PageResult<SearchHitItemResponse> globalSearch(SearchQueryRequest req) {
         long start = System.currentTimeMillis();
         Long userId = SecurityContextHolder.getUserId();
         if (userId == null) {
@@ -84,7 +84,7 @@ public class SearchQueryServiceImpl implements ISearchQueryService {
 
         boolBuilder.must(QueryBuilders.multiMatch(m -> m
                 .query(req.getKeyword())
-                .fields("resourceName^3", "content")));
+                .fields(SearchConstants.BOOSTED_SEARCH_FIELDS)));
 
         boolBuilder.filter(f -> f.bool(b -> buildAclShould(b, userIdStr, memberGroupIds, adminOwnerGroupIds)));
 
@@ -94,14 +94,14 @@ public class SearchQueryServiceImpl implements ISearchQueryService {
                     .map(ResourceType::getExtension)
                     .map(FieldValue::of)
                     .toList();
-            boolBuilder.filter(f -> f.terms(t -> t.field("resourceType").terms(ts -> ts.value(typeValues))));
+            boolBuilder.filter(f -> f.terms(t -> t.field(SearchConstants.FIELD_RESOURCE_TYPE).terms(ts -> ts.value(typeValues))));
         }
 
         NativeQuery query = buildNativeQuery(boolBuilder.build()._toQuery(), req);
-        SearchHits<SearchIndexEntity> searchHits = elasticsearchOperations.search(query, SearchIndexEntity.class);
+        SearchHits<ESIndexEntity> searchHits = elasticsearchOperations.search(query, ESIndexEntity.class);
 
-        List<SearchHitItemResDTO> items = searchHits.stream().map(this::toResDTO).toList();
-        PageResult<SearchHitItemResDTO> result = new PageResult<>(
+        List<SearchHitItemResponse> items = searchHits.stream().map(this::toResDTO).toList();
+        PageResult<SearchHitItemResponse> result = new PageResult<>(
                 searchHits.getTotalHits(), req.getPage(), req.getSize());
         result.addAll(items);
 
@@ -119,22 +119,22 @@ public class SearchQueryServiceImpl implements ISearchQueryService {
                                              List<String> memberGroupIds,
                                              List<String> adminOwnerGroupIds) {
         // 分支 1：白名单用户（owner / 资源级 DISCOVER / userMasks DISCOVER 已合并到 allowedUsers）
-        b.should(s -> s.term(t -> t.field("allowedUsers").value(userIdStr)));
+        b.should(s -> s.term(t -> t.field(SearchConstants.FIELD_ALLOWED_USERS).value(userIdStr)));
 
         // 分支 2：用户是成员组 + 该组 baseDiscover=true + 未被该组 BLACKLIST 否决
         if (CollUtil.isNotEmpty(memberGroupIds)) {
             List<FieldValue> memberValues = memberGroupIds.stream().map(FieldValue::of).toList();
             b.should(s -> s.nested(n -> n
-                    .path(NESTED_PATH_GROUP_ACLS)
+                    .path(SearchConstants.NESTED_PATH_GROUP_ACLS)
                     .query(q -> q.bool(bb -> bb
                             .must(QueryBuilders.terms(t -> t
-                                    .field("groupAcls.groupId")
+                                    .field(SearchConstants.FIELD_GROUP_ACLS_GROUP_ID)
                                     .terms(ts -> ts.value(memberValues))))
                             .must(QueryBuilders.term(t -> t
-                                    .field("groupAcls.baseDiscover")
+                                    .field(SearchConstants.FIELD_GROUP_ACLS_BASE_DISCOVER)
                                     .value(true)))
                             .mustNot(QueryBuilders.term(t -> t
-                                    .field("groupAcls.explicitlyDeniedUsers")
+                                    .field(SearchConstants.FIELD_GROUP_ACLS_DENIED_USERS)
                                     .value(userIdStr)))))
                     .scoreMode(ChildScoreMode.None)));
         }
@@ -143,9 +143,9 @@ public class SearchQueryServiceImpl implements ISearchQueryService {
         if (CollUtil.isNotEmpty(adminOwnerGroupIds)) {
             List<FieldValue> adminValues = adminOwnerGroupIds.stream().map(FieldValue::of).toList();
             b.should(s -> s.nested(n -> n
-                    .path(NESTED_PATH_GROUP_ACLS)
+                    .path(SearchConstants.NESTED_PATH_GROUP_ACLS)
                     .query(q -> q.terms(t -> t
-                            .field("groupAcls.groupId")
+                            .field(SearchConstants.FIELD_GROUP_ACLS_GROUP_ID)
                             .terms(ts -> ts.value(adminValues))))
                     .scoreMode(ChildScoreMode.None)));
         }
@@ -153,38 +153,38 @@ public class SearchQueryServiceImpl implements ISearchQueryService {
         return b;
     }
 
-    private NativeQuery buildNativeQuery(Query query, SearchQueryReqDTO req) {
+    private NativeQuery buildNativeQuery(Query query, SearchQueryRequest req) {
         HighlightParameters hlParams = HighlightParameters.builder()
                 .withPreTags(SearchConstants.HIGHLIGHT_PRE_TAG)
                 .withPostTags(SearchConstants.HIGHLIGHT_POST_TAG)
-                .withFragmentSize(100)
-                .withNumberOfFragments(3)
+                .withFragmentSize(SearchConstants.HIGHLIGHT_FRAGMENT_SIZE)
+                .withNumberOfFragments(SearchConstants.HIGHLIGHT_MAX_FRAGMENTS)
                 .build();
         Highlight highlight = new Highlight(hlParams, List.of(
-                new HighlightField("resourceName"),
-                new HighlightField("content")));
+                new HighlightField(SearchConstants.FIELD_RESOURCE_NAME),
+                new HighlightField(SearchConstants.FIELD_CONTENT)));
 
         return new NativeQueryBuilder()
                 .withQuery(query)
                 .withPageable(PageRequest.of(req.getPage() - 1, req.getSize()))
-                .withHighlightQuery(new HighlightQuery(highlight, SearchIndexEntity.class))
+                .withHighlightQuery(new HighlightQuery(highlight, ESIndexEntity.class))
                 .build();
     }
 
-    private SearchHitItemResDTO toResDTO(SearchHit<SearchIndexEntity> hit) {
-        SearchIndexEntity entity = hit.getContent();
+    private SearchHitItemResponse toResDTO(SearchHit<ESIndexEntity> hit) {
+        ESIndexEntity entity = hit.getContent();
 
-        String resourceName = hit.getHighlightField("resourceName").stream()
+        String resourceName = hit.getHighlightField(SearchConstants.FIELD_RESOURCE_NAME).stream()
                 .findFirst()
                 .orElse(entity.getResourceName());
 
         // 正文高亮可能为空（用户搜的关键词只命中标题）：保持 null，前端按需做空判断
-        List<String> contentHighlights = hit.getHighlightField("content");
+        List<String> contentHighlights = hit.getHighlightField(SearchConstants.FIELD_CONTENT);
         String highlightContent = CollUtil.isNotEmpty(contentHighlights)
-                ? StrUtil.join("...", contentHighlights)
+                ? StrUtil.join(SearchConstants.HIGHLIGHT_FRAGMENT_SEPARATOR, contentHighlights)
                 : null;
 
-        return SearchHitItemResDTO.builder()
+        return SearchHitItemResponse.builder()
                 .resourceId(entity.getResourceId())
                 .resourceType(ResourceType.fromExtension(entity.getResourceType()))
                 .resourceName(resourceName)

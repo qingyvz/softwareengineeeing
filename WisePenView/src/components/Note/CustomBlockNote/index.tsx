@@ -1,50 +1,48 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
-import {
-  BasicTextStyleButton,
-  BlockTypeSelect,
-  ColorStyleButton,
-  CreateLinkButton,
-  FileCaptionButton,
-  FileReplaceButton,
-  FormattingToolbar,
-  FormattingToolbarController,
-  NestBlockButton,
-  SuggestionMenuController,
-  TextAlignButton,
-  UnnestBlockButton,
-  useCreateBlockNote,
-} from '@blocknote/react';
-import { BlockNoteView } from '@blocknote/mantine';
 import { zh } from '@blocknote/core/locales';
-import { filterSuggestionItems } from '@blocknote/core/extensions';
-import { useMount, useUnmount } from 'ahooks';
-import { Button } from 'antd';
-import { RiSparklingLine } from 'react-icons/ri';
+import { BlockNoteView } from '@blocknote/mantine';
 import '@blocknote/mantine/style.css';
+import { useCreateBlockNote } from '@blocknote/react';
+import { useMount, useUnmount } from 'ahooks';
+import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 
-import { useImageService } from '@/contexts/ServicesContext';
+import { useImageService } from '@/domains';
+import { assertImageProxyUploadLimit } from '@/domains/Image';
 import { useAppMessage } from '@/hooks/useAppMessage';
-import { assertImageProxyUploadLimit } from '@/services/Image';
 import {
   useChatPanelStore,
   useCurrentChatSessionStore,
   useNewNoteStore,
   useNoteSelectionStore,
 } from '@/store';
-import type { CustomBlockNoteProps, NoteBodyEditorHandle } from './index.type';
-import { useNoteCaptureKeyEvent } from './useNoteCaptureKeyEvent';
-import { useAttachNoteYjsUndoStack, useNoteYjsUndoManager } from './useNoteYjsUndoStack';
-import { buildNoteSlashMenuItems } from './slashMenuConfig';
+import NoteSlashMenu from '../NoteSlashMenu';
+import NoteToolbar from '../NoteToolbar';
 import { blockNoteSchema } from './blockNoteSchema';
-import { inlineMathDollarExtension } from './LatexSupport/inlineMathDollarExtension';
-import { stripEscapeCharExtension, stripEscapeEditorProps } from './stripEscapeCharExtension';
+import { useAttachNoteYjsUndoStack, useNoteCaptureKeyEvent, useNoteYjsUndoManager } from './hooks';
+import type { CustomBlockNoteProps, NoteBodyEditorHandle } from './index.type';
+import {
+  buildFlatBlocksFromEditor,
+  buildOutlineItemsFromEditor,
+  resolveActiveHeadingId,
+} from './Outline';
+import {
+  collectNoteEditorExtensions,
+  collectNoteEditorProps,
+  getNoteEditorPlugins,
+} from './plugins';
 import styles from './style.module.less';
 
 type CreateBlockNoteOptions = NonNullable<Parameters<typeof useCreateBlockNote>[0]>;
 type BlockNoteCollaborationConfig = NonNullable<CreateBlockNoteOptions['collaboration']>;
 
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null;
+}
+
 const CustomBlockNote = forwardRef<NoteBodyEditorHandle, CustomBlockNoteProps>(
-  ({ resourceId, doc, provider, readOnly = false }, ref) => {
+  (
+    { resourceId, doc, provider, readOnly = false, onOutlineChange, onActiveHeadingChange },
+    ref
+  ) => {
     const imageService = useImageService();
     const message = useAppMessage();
     const currentSessionId = useCurrentChatSessionStore((state) => state.currentSessionId);
@@ -56,7 +54,12 @@ const CustomBlockNote = forwardRef<NoteBodyEditorHandle, CustomBlockNoteProps>(
     );
     const clearSelectedText = useNoteSelectionStore((state) => state.clearSelectedText);
     const newNoteBodyOnChangeCleanupRef = useRef<(() => void) | null>(null);
+    const flatBlocksRef = useRef<{ id: string; type: string }[]>([]);
     const { noteFragment, undoManager } = useNoteYjsUndoManager(doc);
+
+    const plugins = useMemo(() => getNoteEditorPlugins(), []);
+    const editorExtensions = useMemo(() => collectNoteEditorExtensions(plugins), [plugins]);
+    const editorProps = useMemo(() => collectNoteEditorProps(plugins), [plugins]);
 
     const uploadFile = useCallback(
       async (file: File) => {
@@ -87,9 +90,9 @@ const CustomBlockNote = forwardRef<NoteBodyEditorHandle, CustomBlockNoteProps>(
       trailingBlock: true,
       disableExtensions: ['history', 'yUndo'],
       uploadFile,
-      extensions: [stripEscapeCharExtension, inlineMathDollarExtension()],
+      extensions: editorExtensions,
       _tiptapOptions: {
-        editorProps: stripEscapeEditorProps,
+        editorProps,
       },
       collaboration: {
         provider: provider as BlockNoteCollaborationConfig['provider'],
@@ -116,6 +119,19 @@ const CustomBlockNote = forwardRef<NoteBodyEditorHandle, CustomBlockNoteProps>(
       newNoteBodyOnChangeCleanupRef.current = editor.onChange(() => {
         const isNoteEmpty = editor.blocksToMarkdownLossy().trim().length === 0;
         useNewNoteStore.getState().syncNewNoteBodyFromEditor(resourceId, isNoteEmpty);
+
+        const needOutline = Boolean(onOutlineChange);
+        const needFlatBlocks = Boolean(onActiveHeadingChange);
+        if (needOutline || needFlatBlocks) {
+          const items = needOutline ? buildOutlineItemsFromEditor(editor) : [];
+          const flat = needFlatBlocks ? buildFlatBlocksFromEditor(editor) : [];
+          if (needFlatBlocks) {
+            flatBlocksRef.current = flat;
+          }
+          if (needOutline) {
+            onOutlineChange?.(items);
+          }
+        }
       });
     });
 
@@ -133,11 +149,68 @@ const CustomBlockNote = forwardRef<NoteBodyEditorHandle, CustomBlockNoteProps>(
         focus: () => {
           editor.focus();
         },
+        navigateToBlock: (id: string) => {
+          try {
+            editor.setTextCursorPosition(id, 'start');
+            editor.focus();
+            // 再次触发 scrollIntoView，避免未滚动到可视区域
+            const view = (
+              editor as unknown as {
+                prosemirrorView?: { state?: { tr?: unknown }; dispatch?: unknown };
+              }
+            ).prosemirrorView;
+            const canScroll =
+              typeof view?.dispatch === 'function' &&
+              view?.state &&
+              isRecord(view.state) &&
+              'tr' in view.state &&
+              isRecord(view.state.tr) &&
+              typeof (view.state.tr as { scrollIntoView?: unknown }).scrollIntoView === 'function';
+            if (canScroll) {
+              window.requestAnimationFrame(() => {
+                try {
+                  (view.dispatch as (tr: unknown) => void)(
+                    (view.state as { tr: { scrollIntoView: () => unknown } }).tr.scrollIntoView()
+                  );
+                } catch {
+                  void 0;
+                }
+              });
+            }
+          } catch {
+            editor.focus();
+          }
+        },
       }),
       [editor]
     );
 
     const onKeyDownCapture = useNoteCaptureKeyEvent({ provider, undoManager, readOnly });
+    const syncActiveHeading = useCallback(() => {
+      if (!onActiveHeadingChange) {
+        return;
+      }
+      let activeId: string | undefined;
+      try {
+        const cursor = editor.getTextCursorPosition();
+        const currentId = cursor.block?.id;
+        if (!currentId) {
+          onActiveHeadingChange(undefined);
+          return;
+        }
+        const flat = flatBlocksRef.current;
+        activeId = resolveActiveHeadingId(flat, currentId);
+      } catch {
+        activeId = undefined;
+      }
+      onActiveHeadingChange(activeId);
+    }, [editor, onActiveHeadingChange]);
+
+    const handleSelectionChange = useCallback(() => {
+      syncSelectedText();
+      syncActiveHeading();
+    }, [syncActiveHeading, syncSelectedText]);
+
     const handleAskAi = useCallback(() => {
       if (!currentSessionId) {
         return;
@@ -166,52 +239,10 @@ const CustomBlockNote = forwardRef<NoteBodyEditorHandle, CustomBlockNoteProps>(
           formattingToolbar={false}
           slashMenu={false}
           editable={!readOnly}
-          onSelectionChange={syncSelectedText}
+          onSelectionChange={handleSelectionChange}
         >
-          <FormattingToolbarController
-            formattingToolbar={() => (
-              <FormattingToolbar>
-                <Button
-                  type="primary"
-                  size="small"
-                  icon={<RiSparklingLine size={14} />}
-                  className={styles.askAiBtn}
-                  onMouseDown={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                  }}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    handleAskAi();
-                  }}
-                >
-                  问AI
-                </Button>
-                <BlockTypeSelect key="blockTypeSelect" />
-                <FileCaptionButton key="fileCaptionButton" />
-                <FileReplaceButton key="replaceFileButton" />
-                <BasicTextStyleButton basicTextStyle="bold" key="boldStyleButton" />
-                <BasicTextStyleButton basicTextStyle="italic" key="italicStyleButton" />
-                <BasicTextStyleButton basicTextStyle="underline" key="underlineStyleButton" />
-                <BasicTextStyleButton basicTextStyle="strike" key="strikeStyleButton" />
-                <BasicTextStyleButton basicTextStyle="code" key="codeStyleButton" />
-                <TextAlignButton textAlignment="left" key="textAlignLeftButton" />
-                <TextAlignButton textAlignment="center" key="textAlignCenterButton" />
-                <TextAlignButton textAlignment="right" key="textAlignRightButton" />
-                <ColorStyleButton key="colorStyleButton" />
-                <NestBlockButton key="nestBlockButton" />
-                <UnnestBlockButton key="unnestBlockButton" />
-                <CreateLinkButton key="createLinkButton" />
-              </FormattingToolbar>
-            )}
-          />
-          <SuggestionMenuController
-            triggerCharacter="/"
-            getItems={async (query) => {
-              return filterSuggestionItems(buildNoteSlashMenuItems(editor), query);
-            }}
-          />
+          <NoteToolbar onAskAi={handleAskAi} />
+          <NoteSlashMenu editor={editor} plugins={plugins} />
         </BlockNoteView>
       </div>
     );

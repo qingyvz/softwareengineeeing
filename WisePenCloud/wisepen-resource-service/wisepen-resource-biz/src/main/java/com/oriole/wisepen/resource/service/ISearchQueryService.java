@@ -1,8 +1,8 @@
 package com.oriole.wisepen.resource.service;
 
 import com.oriole.wisepen.common.core.domain.PageResult;
-import com.oriole.wisepen.resource.domain.dto.req.SearchQueryReqDTO;
-import com.oriole.wisepen.resource.domain.dto.res.SearchHitItemResDTO;
+import com.oriole.wisepen.resource.domain.dto.req.SearchQueryRequest;
+import com.oriole.wisepen.resource.domain.dto.res.SearchHitItemResponse;
 
 /**
  * 搜索查询服务。
@@ -17,5 +17,5 @@ public interface ISearchQueryService {
      * 并按资源域位掩码 ACL 模型在 ES 侧完成可见性过滤：白名单（owner / DISCOVER 用户）
      * + nested groupAcls（baseDiscover 默认成员路径 + admin/owner 短路）。
      */
-    PageResult<SearchHitItemResDTO> globalSearch(SearchQueryReqDTO req);
+    PageResult<SearchHitItemResponse> globalSearch(SearchQueryRequest req);
 }

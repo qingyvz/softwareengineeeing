@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: wisepen-resource-service # 服务名，也是 Nacos 里的 Data ID
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     nacos:
       discovery:

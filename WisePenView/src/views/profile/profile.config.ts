@@ -1,5 +1,4 @@
-import { IDENTITY_TYPE } from '@/constants/user';
-import type { UpdateUserInfoRequest } from '@/services/User';
+import { IDENTITY_TYPE } from '@/domains/User/enum';
 
 /** 基本档案字段显隐配置，按 identityType 计算 */
 export const getProfileFieldConfig = (identityType: number) => {

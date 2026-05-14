@@ -24,10 +24,8 @@ import static com.oriole.wisepen.file.storage.api.constant.MqTopicConstants.TOPI
 @RequiredArgsConstructor
 public class KafkaDocumentEventPublisher {
 
-//    private final KafkaTemplate<String, String> kafkaTemplate;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
-
 
     // 发布文档解析任务（内部削峰）
     public void publishParseTask(DocumentParseTaskMessage msg) {
@@ -43,8 +41,8 @@ public class KafkaDocumentEventPublisher {
     // 发布文档处理就绪事件
     public void publishReadyEvent(DocumentReadyMessage msg) {
         try {
-//            String jsonMessage = objectMapper.writeValueAsString(msg);
-            kafkaTemplate.send(TOPIC_DOCUMENT_READY, msg.getResourceId(), msg);
+            String jsonMessage = objectMapper.writeValueAsString(msg);
+            kafkaTemplate.send(TOPIC_DOCUMENT_READY, msg.getResourceId(), jsonMessage);
             log.debug("成功发布文档就绪事件 Document: {}", msg.getResourceId());
         } catch (Exception e) {
             log.error("发布文档就绪事件失败 Document: {}", msg.getResourceId(), e);

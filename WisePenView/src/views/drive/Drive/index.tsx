@@ -1,17 +1,18 @@
-import React, { useState, useCallback, useRef } from 'react';
+import FlatDrive from '@/components/Drive/FlatDrive';
+import GlobalSearchBox from '@/components/GlobalSearchBox';
+import { StickerManageModal } from '@/components/Drive/Modals';
+import FolderDrive from '@/components/Drive/TreeDrive/FolderDrive';
+import type { UploadQueueTabRef } from '@/components/Drive/UploadQueueTab';
+import UploadQueueTab from '@/components/Drive/UploadQueueTab';
+import { useDrivePreferencesStore, type DriveViewMode } from '@/store';
 import { Button, Tabs } from 'antd';
+import React, { useCallback, useRef, useState } from 'react';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import { LuTags } from 'react-icons/lu';
-import FlatDrive from '@/components/Drive/FlatDrive';
-import FolderDrive from '@/components/Drive/TreeDrive/FolderDrive';
-import UploadQueueTab from '@/components/Drive/UploadQueueTab';
-import type { UploadQueueTabRef } from '@/components/Drive/UploadQueueTab';
-import { StickerManageModal } from '@/components/Drive/Modals';
-import { useDrivePreferencesStore, type DriveViewMode } from '@/store';
 
 import { UploadDocumentModal } from './UploadDocumentModal';
 import styles from './style.module.less';
-import GlobalSearchBox from '@/components/GlobalSearchBox';
+
 const VIEW_TABS: { key: DriveViewMode; label: string }[] = [
   { key: 'folder', label: '文件夹管理' },
   { key: 'flat', label: '标签管理' },
@@ -37,9 +38,7 @@ const Drive: React.FC = () => {
           <span className={styles.pageSubtitle}>管理您的项目和文档</span>
         </div>
         <div className={styles.actionsRow}>
-
           <GlobalSearchBox />
-
           <Button
             type="default"
             icon={<LuTags size={16} />}

@@ -1,18 +1,18 @@
-import React, { forwardRef, useImperativeHandle, useMemo, useState } from 'react';
-import { useMount, useRequest, useInterval, useUnmount } from 'ahooks';
-import { Button, Empty, Space, Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import { useDocumentService } from '@/contexts/ServicesContext';
-import { useAppMessage } from '@/hooks/useAppMessage';
-import { formatSize } from '@/utils/format';
-import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { useDocumentService } from '@/domains';
+import type { PendingDocItem } from '@/domains/Document';
 import {
-  isDocumentCancelableStatus,
   getDocumentStatusLabel,
+  isDocumentCancelableStatus,
   isDocumentRetryableStatus,
   isDocumentTerminalStatus,
-} from '@/constants/document';
-import type { PendingDocItem } from '@/services/Document';
+} from '@/domains/Document/enum';
+import { useAppMessage } from '@/hooks/useAppMessage';
+import { formatFileSize } from '@/utils/format/formatFileSize';
+import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { useInterval, useMount, useRequest, useUnmount } from 'ahooks';
+import { Button, Empty, Space, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { forwardRef, useImperativeHandle, useMemo, useState } from 'react';
 import styles from './style.module.less';
 
 const SYNC_INTERVAL_MS = 5000;
@@ -160,7 +160,7 @@ const UploadQueueTab = forwardRef<UploadQueueTabRef>((_, ref) => {
         dataIndex: ['uploadMeta', 'size'],
         key: 'size',
         width: 120,
-        render: (value: number) => formatSize(value),
+        render: (value: number) => formatFileSize(value),
       },
       {
         title: '状态',

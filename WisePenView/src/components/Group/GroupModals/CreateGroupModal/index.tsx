@@ -1,15 +1,14 @@
-import React, { useMemo, useState } from 'react';
-import { Modal, Button, Form, Input, Radio, Select, Upload } from 'antd';
-import type { UploadFile } from 'antd';
-import { useRequest } from 'ahooks';
-import { LuUpload } from 'react-icons/lu';
-import { useGroupService, useImageService, useUserService } from '@/contexts/ServicesContext';
-import type { CreateGroupRequest } from '@/services/Group';
-import type { GroupFileOrgLogic } from '@/types/group';
-import { parseErrorMessage } from '@/utils/parseErrorMessage';
-import { createBeforeUploadImageWithinLimit } from '@/utils/image';
+import { useGroupService, useImageService, useUserService } from '@/domains';
+import type { CreateGroupRequest, GroupFileOrgLogic } from '@/domains/Group';
+import { ALLOWED_GROUP_TYPES_MAP, GROUP, GROUP_TYPE } from '@/domains/Group/enum';
 import { useAppMessage } from '@/hooks/useAppMessage';
-import { GROUP_TYPE, GROUP_TYPE_LABELS, ALLOWED_GROUP_TYPES_MAP } from '@/constants/group';
+import { createBeforeUploadImageWithinLimit } from '@/utils/image/uploadLimit';
+import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { useRequest } from 'ahooks';
+import type { UploadFile } from 'antd';
+import { Button, Form, Input, Modal, Radio, Select, Upload } from 'antd';
+import React, { useMemo, useState } from 'react';
+import { LuUpload } from 'react-icons/lu';
 import type { CreateGroupModalProps } from './index.type';
 
 import styles from './index.module.less';
@@ -28,10 +27,7 @@ const fileFromCoverField = (fileList?: UploadFile[]): File | undefined => {
   return raw instanceof File ? raw : undefined;
 };
 
-const groupTypeOptionsBase = Object.entries(GROUP_TYPE_LABELS).map(([value, label]) => ({
-  value: Number(value),
-  label,
-}));
+const groupTypeOptionsBase = GROUP.options;
 
 const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ open, onCancel, onSuccess }) => {
   const groupService = useGroupService();

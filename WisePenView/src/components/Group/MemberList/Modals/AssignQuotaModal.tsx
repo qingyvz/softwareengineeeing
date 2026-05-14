@@ -1,14 +1,15 @@
-import React, { useCallback, useState } from 'react';
-import { Modal, Button, InputNumber, Form, Alert } from 'antd';
-import { useRequest } from 'ahooks';
-import { useQuotaService } from '@/contexts/ServicesContext';
-import { useMemberEditGuard } from './useMemberEditGuard';
-import type { AssignQuotaModalProps } from './index.type';
 import SelectedMemberList from '@/components/Common/SelectedMemberList';
-import styles from './style.module.less';
+import { useQuotaService } from '@/domains';
 import { useAppMessage } from '@/hooks/useAppMessage';
 import { parseErrorMessage } from '@/utils/parseErrorMessage';
-import { GROUP_MEMBER_TOKEN_LIMIT_MAX } from '@/constants/quota';
+import { useRequest } from 'ahooks';
+import { Alert, Button, Form, InputNumber, Modal } from 'antd';
+import React, { useCallback, useState } from 'react';
+import type { AssignQuotaModalProps } from './index.type';
+import styles from './style.module.less';
+import { useMemberEditGuard } from './useMemberEditGuard';
+
+const GROUP_MEMBER_TOKEN_LIMIT_MAX = 100_000_000;
 
 const AssignQuotaModal: React.FC<AssignQuotaModalProps> = ({
   open,

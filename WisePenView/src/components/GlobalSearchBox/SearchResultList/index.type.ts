@@ -1,4 +1,4 @@
-import type { SearchHitItemResDTO, SearchScope } from '@/services/Resource/index.type';
+import type { SearchHitItemResDTO, SearchScope } from '@/domains/Resource';
 
 export interface SearchResultListProps {
   /** 已防抖的关键词，用于决定"未输入"与"无结果"两种空态文案 */

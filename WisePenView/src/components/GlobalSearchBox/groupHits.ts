@@ -1,4 +1,4 @@
-import type { SearchHitItemResDTO, SearchScope } from '@/services/Resource/index.type';
+import type { SearchHitItemResDTO, SearchScope } from '@/domains/Resource';
 
 /**
  * 资源类型字面值 → 分组 Header 标签的映射。

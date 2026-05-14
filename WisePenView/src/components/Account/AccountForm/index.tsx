@@ -1,20 +1,15 @@
-import React, { useMemo } from 'react';
+import { useUserService } from '@/domains';
+import type { UpdateUserInfoRequest } from '@/domains/User';
+import { DEGREE, getDegreeLevelLabel, getSexLabel, SEX_ENUM } from '@/domains/User/enum';
+import { useAppMessage } from '@/hooks/useAppMessage';
+import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { useRequest } from 'ahooks';
 import { Button, Descriptions, Form, Input, Select } from 'antd';
 import type { InputRef } from 'antd/es/input';
-import { useRequest } from 'ahooks';
+import React, { useMemo } from 'react';
 import { RiPencilLine } from 'react-icons/ri';
-import {
-  DEGREE_LEVEL_LABELS,
-  getDegreeLevelLabel,
-  getSexLabel,
-  SEX_LABELS,
-} from '@/constants/user';
-import { useUserService } from '@/contexts/ServicesContext';
-import type { UpdateUserInfoRequest } from '@/services/User';
-import { parseErrorMessage } from '@/utils/parseErrorMessage';
-import { getProfileDisplayString } from './profileDisplay';
 import type { AccountFormProps } from './index.type';
-import { useAppMessage } from '@/hooks/useAppMessage';
+import { getProfileDisplayString } from './profileDisplay';
 import styles from './style.module.less';
 
 const { Option } = Select;
@@ -123,13 +118,13 @@ const AccountForm: React.FC<AccountFormProps> = ({
   const optionsMap = useMemo(
     () =>
       ({
-        sex: Object.entries(SEX_LABELS).map(([value, label]) => (
-          <Option key={value} value={Number(value)}>
+        sex: SEX_ENUM.options.map(({ value, label }) => (
+          <Option key={value} value={value}>
             {label}
           </Option>
         )),
-        degreeLevel: Object.entries(DEGREE_LEVEL_LABELS).map(([value, label]) => (
-          <Option key={value} value={Number(value)}>
+        degreeLevel: DEGREE.options.map(({ value, label }) => (
+          <Option key={value} value={value}>
             {label}
           </Option>
         )),

@@ -1,9 +1,9 @@
 import { useInfiniteScroll } from 'ahooks';
 import type { RefObject } from 'react';
-import { useResourceService } from '@/contexts/ServicesContext/hooks';
+import { useResourceService } from '@/domains';
 import { useAppMessage } from '@/hooks/useAppMessage';
 import { parseErrorMessage } from '@/utils/parseErrorMessage';
-import type { SearchHitItemResDTO, SearchScope } from '@/services/Resource/index.type';
+import type { SearchHitItemResDTO, SearchScope } from '@/domains/Resource';
 
 /** 单页大小：与后端 `@Max(100)` 上限一致，默认 20 是首屏滚动加载的舒适步长 */
 export const PAGE_SIZE = 20;

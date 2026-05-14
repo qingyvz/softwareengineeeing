@@ -5,8 +5,8 @@ import com.oriole.wisepen.common.core.domain.R;
 import com.oriole.wisepen.common.core.domain.enums.BusinessType;
 import com.oriole.wisepen.common.log.annotation.Log;
 import com.oriole.wisepen.common.security.annotation.CheckLogin;
-import com.oriole.wisepen.resource.domain.dto.req.SearchQueryReqDTO;
-import com.oriole.wisepen.resource.domain.dto.res.SearchHitItemResDTO;
+import com.oriole.wisepen.resource.domain.dto.req.SearchQueryRequest;
+import com.oriole.wisepen.resource.domain.dto.res.SearchHitItemResponse;
 import com.oriole.wisepen.resource.service.ISearchQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,7 +33,7 @@ public class SearchController {
             isSaveRequestData = false,
             isSaveResponseData = false)
     @PostMapping("/global")
-    public R<PageResult<SearchHitItemResDTO>> globalSearch(@Validated @RequestBody SearchQueryReqDTO reqDTO) {
+    public R<PageResult<SearchHitItemResponse>> globalSearch(@Validated @RequestBody SearchQueryRequest reqDTO) {
         return R.ok(searchQueryService.globalSearch(reqDTO));
     }
 }

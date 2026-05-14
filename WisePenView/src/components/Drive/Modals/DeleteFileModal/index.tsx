@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Modal, Button, Alert } from 'antd';
-import { useRequest } from 'ahooks';
-import { useDocumentService, useNoteService } from '@/contexts/ServicesContext';
-import { parseErrorMessage } from '@/utils/parseErrorMessage';
-import { useRecentFilesStore } from '@/store';
-import type { DeleteFileModalProps } from './index.type';
+import { useDocumentService, useNoteService } from '@/domains';
+import { RESOURCE_TYPE } from '@/domains/Resource/enum';
 import { useAppMessage } from '@/hooks/useAppMessage';
-import { RESOURCE_TYPE } from '@/constants/resource';
+import { useRecentFilesStore } from '@/store';
+import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { useRequest } from 'ahooks';
+import { Alert, Button, Modal } from 'antd';
+import React from 'react';
+import type { DeleteFileModalProps } from './index.type';
 
 const DeleteFileModal: React.FC<DeleteFileModalProps> = ({ open, onCancel, onSuccess, file }) => {
   const documentService = useDocumentService();

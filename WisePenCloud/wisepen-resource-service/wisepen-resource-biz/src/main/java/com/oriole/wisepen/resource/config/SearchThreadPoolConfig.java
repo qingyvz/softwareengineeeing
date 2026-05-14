@@ -1,5 +1,6 @@
 package com.oriole.wisepen.resource.config;
 
+import com.oriole.wisepen.resource.constant.SearchConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,6 +18,6 @@ public class SearchThreadPoolConfig {
 
     @Bean
     public ScheduledExecutorService scheduledExecutorService() {
-        return Executors.newScheduledThreadPool(5);
+        return Executors.newScheduledThreadPool(SearchConstants.COREPOOLSIZE);
     }
 }

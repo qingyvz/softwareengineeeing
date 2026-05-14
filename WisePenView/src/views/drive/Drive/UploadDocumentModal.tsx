@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Modal, Upload, Progress, Button } from 'antd';
-import type { UploadFile, UploadProps } from 'antd';
 import { useRequest } from 'ahooks';
+import type { UploadFile, UploadProps } from 'antd';
+import { Button, Modal, Progress, Upload } from 'antd';
+import React, { useCallback, useState } from 'react';
 import { AiOutlineInbox } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 
-import { useDocumentService } from '@/contexts/ServicesContext';
+import { useDocumentService } from '@/domains';
 import { useAppMessage } from '@/hooks/useAppMessage';
 import { parseErrorMessage } from '@/utils/parseErrorMessage';
 

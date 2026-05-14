@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react';
-import { Modal, Button, Input } from 'antd';
-import { useRequest } from 'ahooks';
-import { useTagService } from '@/contexts/ServicesContext';
-import { parseErrorMessage } from '@/utils/parseErrorMessage';
-import { validateReservedName } from '@/utils/validateReservedName';
-import type { NewTagModalProps } from './index.type';
+import { useTagService } from '@/domains';
 import { useAppMessage } from '@/hooks/useAppMessage';
+import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { validateReservedName } from '@/utils/tag/validateReservedName';
+import { useRequest } from 'ahooks';
+import { Button, Input, Modal } from 'antd';
+import React, { useCallback, useState } from 'react';
+import type { NewTagModalProps } from './index.type';
 
 import styles from './index.module.less';
 

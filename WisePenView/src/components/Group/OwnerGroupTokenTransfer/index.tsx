@@ -1,14 +1,13 @@
 /**
  * 高级组组长：个人计算点与小组池之间的 Token 划拨（transferTokenBetweenGroupAndUser）。
  */
-import React, { useCallback, useState } from 'react';
-import { Button, InputNumber, Skeleton } from 'antd';
-import { useRequest } from 'ahooks';
-import { useWalletService } from '@/contexts/ServicesContext';
-import { useGroupService } from '@/contexts/ServicesContext';
-import { WALLET_TOKEN_TRANSFER_TYPE } from '@/constants/wallet';
-import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { useGroupService, useWalletService } from '@/domains';
+import { WALLET_TOKEN_TRANSFER_TYPE } from '@/domains/Wallet/enum';
 import { useAppMessage } from '@/hooks/useAppMessage';
+import { parseErrorMessage } from '@/utils/parseErrorMessage';
+import { useRequest } from 'ahooks';
+import { Button, InputNumber, Skeleton } from 'antd';
+import React, { useCallback, useState } from 'react';
 import type { OwnerGroupTokenTransferProps } from './index.type';
 import styles from './style.module.less';
 
